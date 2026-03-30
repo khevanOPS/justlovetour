@@ -1,0 +1,17 @@
+Just Love Tour - Demo build
+
+Fastest demo (no install)
+- Upload the /dist folder to any static hosting (Netlify / Vercel / Cloudflare Pages).
+
+Local demo (requires Node)
+1) npm install
+2) npm run dev        (development)
+   OR
+   npm run preview     (serves the already-built /dist)
+
+New features implemented (same premium feel):
+- Live weather pill in hero (Port Louis; auto-fallback if unavailable)
+- Explore Mauritius (region buttons -> quick tour list)
+- Smart Tour Recommender (3 questions -> top 3 tours)
+- Instant Tour Planner (WhatsApp prefilled message)
+- Learn More pages: “⚡ X travellers viewed today” + Travel time + “Only in Mauritius” story blocks
