@@ -995,24 +995,26 @@ export default function App() {
               <div className="min-w-0">
                 <label className="text-sm font-medium text-white/90">{t.plannerDates}</label>
                 <div className="mt-2 grid gap-3 sm:grid-cols-2">
-                  <div className="relative min-w-0">
+                  <div className="relative min-w-0 overflow-hidden rounded-xl bg-white">
                     <CalendarDays className="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-gray-400" />
                     <input
                       type="date"
                       value={planStartDate}
                       min={today}
                       onChange={(event) => setPlanStartDate(event.target.value)}
-                      className="min-w-0 w-full rounded-xl py-3 pl-10 pr-4 text-gray-900"
+                      style={{ minWidth: 0, maxWidth: '100%', WebkitAppearance: 'none' }}
+                      className="block w-full max-w-full bg-transparent py-3 pl-10 pr-4 text-sm text-gray-900"
                     />
                   </div>
-                  <div className="relative min-w-0">
+                  <div className="relative min-w-0 overflow-hidden rounded-xl bg-white">
                     <CalendarDays className="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-gray-400" />
                     <input
                       type="date"
                       value={planEndDate}
                       min={planStartDate || today}
                       onChange={(event) => setPlanEndDate(event.target.value)}
-                      className="min-w-0 w-full rounded-xl py-3 pl-10 pr-4 text-gray-900"
+                      style={{ minWidth: 0, maxWidth: '100%', WebkitAppearance: 'none' }}
+                      className="block w-full max-w-full bg-transparent py-3 pl-10 pr-4 text-sm text-gray-900"
                     />
                   </div>
                 </div>
