@@ -221,7 +221,7 @@ export default function App() {
   const youtubeChannelUrl = 'https://www.youtube.com/@JustLoveToursMauritius'
   const youtubeVideos = [
     { id: 'video-1', youtubeId: 'ydbMLfiPWA0', startSeconds: undefined },
-    { id: 'video-2', youtubeId: '84fQQHAORl8', startSeconds: 102 },
+    { id: 'video-2', youtubeId: 'qeebGVi22Qc', startSeconds: undefined },
     { id: 'video-3', youtubeId: 'E8Uur_Du7io', startSeconds: undefined },
     { id: 'video-4', youtubeId: 'kitYc68akb8', startSeconds: undefined }
   ] as const
@@ -992,27 +992,27 @@ export default function App() {
             <p className="mb-6 text-white/90">{t.plannerSubtitle}</p>
 
             <div className="grid gap-4 sm:grid-cols-2">
-              <div>
+              <div className="min-w-0">
                 <label className="text-sm font-medium text-white/90">{t.plannerDates}</label>
                 <div className="mt-2 grid gap-3 sm:grid-cols-2">
-                  <div className="relative">
+                  <div className="relative min-w-0">
                     <CalendarDays className="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-gray-400" />
                     <input
                       type="date"
                       value={planStartDate}
                       min={today}
                       onChange={(event) => setPlanStartDate(event.target.value)}
-                      className="w-full rounded-xl py-3 pl-10 pr-4 text-gray-900"
+                      className="min-w-0 w-full rounded-xl py-3 pl-10 pr-4 text-gray-900"
                     />
                   </div>
-                  <div className="relative">
+                  <div className="relative min-w-0">
                     <CalendarDays className="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-gray-400" />
                     <input
                       type="date"
                       value={planEndDate}
                       min={planStartDate || today}
                       onChange={(event) => setPlanEndDate(event.target.value)}
-                      className="w-full rounded-xl py-3 pl-10 pr-4 text-gray-900"
+                      className="min-w-0 w-full rounded-xl py-3 pl-10 pr-4 text-gray-900"
                     />
                   </div>
                 </div>
