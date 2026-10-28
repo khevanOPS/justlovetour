@@ -4,7 +4,7 @@ INSERT INTO tours (id, slug, category, status, sort_order, price_mode, price_adu
 INSERT INTO tour_translations (tour_id, lang, name, summary, description, stops, included, extras) VALUES (1, 'en', 'Fauna & Flora', 'Volcano crater, sacred lake, Black River Gorges and the Seven Coloured Earth, with lunch included.', 'A full day through the green heart of the island. Departure 09:00 to 17:00, or 08:30 to 16:30, with hotel pickup and return.', '["Ship model factory","Trou aux Cerfs volcano","Ganga Talao (Grand Bassin sacred lake)","Black River Gorges viewpoint","Lunch","Seven Coloured Earth"]', '["Hotel pickup and return","Lunch","Seven Coloured Earth entrance"]', '["Chamarel rum distillery visit (entrance paid on the day)"]');
 INSERT INTO tour_translations (tour_id, lang, name, summary, description, stops, included, extras) VALUES (1, 'fr', 'Faune & Flore', '', '', '[]', '[]', '[]');
 INSERT INTO tour_translations (tour_id, lang, name, summary, description, stops, included, extras) VALUES (1, 'ru', 'Фауна и флора', '', '', '[]', '[]', '[]');
-INSERT INTO media (id, r2_key, mime, bytes, alt_en, created_at) VALUES ('1f16f3c61aa9d9e3c9e3b437', 'seed/1f16f3c61aa9d9e3c9e3b437.jpg', 'image/jpeg', 124879, 'Fauna & Flora', 1793145600000);
+INSERT INTO media (id, r2_key, mime, bytes, width, height, alt_en, created_at) VALUES ('1f16f3c61aa9d9e3c9e3b437', 'seed/1f16f3c61aa9d9e3c9e3b437.jpg', 'image/jpeg', 124879, 565, 753, 'Fauna & Flora', 1793145600000);
 INSERT INTO tour_media (tour_id, media_id, sort_order) VALUES (1, '1f16f3c61aa9d9e3c9e3b437', 0);
 UPDATE tours SET cover_media_id = '1f16f3c61aa9d9e3c9e3b437' WHERE id = 1;
 
@@ -12,7 +12,7 @@ INSERT INTO tours (id, slug, category, status, sort_order, price_mode, price_adu
 INSERT INTO tour_translations (tour_id, lang, name, summary, description, stops, included, extras) VALUES (2, 'en', 'Spirit Frontier Adventures', 'Port Louis from the Citadel, the markets, Pamplemousses garden and the Red Church at Cap Malheureux.', 'History, colour and the north coast in one day. Departure 09:00 to 17:00, or 08:30 to 16:30, with hotel pickup and return.', '["Citadel fort viewpoint","Local market","Craft market","Lunch","Pamplemousses Botanical Garden","Red Church, Cap Malheureux"]', '["Hotel pickup and return","Lunch","Pamplemousses Botanical Garden entrance"]', '[]');
 INSERT INTO tour_translations (tour_id, lang, name, summary, description, stops, included, extras) VALUES (2, 'fr', 'Spirit Frontier Adventures', '', '', '[]', '[]', '[]');
 INSERT INTO tour_translations (tour_id, lang, name, summary, description, stops, included, extras) VALUES (2, 'ru', 'Spirit Frontier Adventures', '', '', '[]', '[]', '[]');
-INSERT INTO media (id, r2_key, mime, bytes, alt_en, created_at) VALUES ('472ad0aa1c8fcd06f1bd0cd3', 'seed/472ad0aa1c8fcd06f1bd0cd3.jpeg', 'image/jpeg', 112241, 'Spirit Frontier Adventures', 1793145600000);
+INSERT INTO media (id, r2_key, mime, bytes, width, height, alt_en, created_at) VALUES ('472ad0aa1c8fcd06f1bd0cd3', 'seed/472ad0aa1c8fcd06f1bd0cd3.jpeg', 'image/jpeg', 112241, 526, 789, 'Spirit Frontier Adventures', 1793145600000);
 INSERT INTO tour_media (tour_id, media_id, sort_order) VALUES (2, '472ad0aa1c8fcd06f1bd0cd3', 0);
 UPDATE tours SET cover_media_id = '472ad0aa1c8fcd06f1bd0cd3' WHERE id = 2;
 
@@ -30,7 +30,7 @@ INSERT INTO tours (id, slug, category, status, sort_order, price_mode, price_adu
 INSERT INTO tour_translations (tour_id, lang, name, summary, description, stops, included, extras) VALUES (5, 'en', 'Ile aux Cerfs / 5 Islands Tours', 'A full day at sea with lagoon cruising, island stops, and time to relax on the water.', 'Spend a relaxing full day at sea on the east coast, cruising across Mauritius’ wide turquoise lagoon with time for island stops, swimming, and easy sailing.', '[]', '[]', '[]');
 INSERT INTO tour_translations (tour_id, lang, name, summary, description, stops, included, extras) VALUES (5, 'fr', 'Ile aux Cerfs / 5 Islands Tours', 'Une journée en mer entre lagon, arrêts sur les îles et moments de détente sur l’eau.', 'Profitez d’une journée complète en mer sur la côte est, à travers le grand lagon turquoise de Maurice, avec navigation, baignade, arrêts sur les îles et ambiance détendue.', '[]', '[]', '[]');
 INSERT INTO tour_translations (tour_id, lang, name, summary, description, stops, included, extras) VALUES (5, 'ru', 'Ile aux Cerfs / 5 Islands Tours', 'Целый день на воде: лагуна, островные остановки и спокойный отдых в море.', 'Проведите расслабленный день на восточном побережье, путешествуя по большой бирюзовой лагуне Маврикия с остановками у островов, купанием и спокойной прогулкой по морю.', '[]', '[]', '[]');
-INSERT INTO media (id, r2_key, mime, bytes, alt_en, created_at) VALUES ('e3cfa52d4be6fcd54e2a7ac6', 'seed/e3cfa52d4be6fcd54e2a7ac6.jpg', 'image/jpeg', 122900, 'Ile aux Cerfs / 5 Islands Tours', 1793145600000);
+INSERT INTO media (id, r2_key, mime, bytes, width, height, alt_en, created_at) VALUES ('e3cfa52d4be6fcd54e2a7ac6', 'seed/e3cfa52d4be6fcd54e2a7ac6.jpg', 'image/jpeg', 122900, 1344, 768, 'Ile aux Cerfs / 5 Islands Tours', 1793145600000);
 INSERT INTO tour_media (tour_id, media_id, sort_order) VALUES (5, 'e3cfa52d4be6fcd54e2a7ac6', 0);
 UPDATE tours SET cover_media_id = 'e3cfa52d4be6fcd54e2a7ac6' WHERE id = 5;
 
@@ -38,7 +38,7 @@ INSERT INTO tours (id, slug, category, status, sort_order, price_mode, price_adu
 INSERT INTO tour_translations (tour_id, lang, name, summary, description, stops, included, extras) VALUES (6, 'en', 'Catamaran & Speed Boat Cruises', 'Cruise turquoise lagoons, meet dolphins, and spend the day island hopping.', 'Experience the best of Mauritius waters with our Catamaran & Speed Boat Cruises. From dolphin encounters to island hopping, adventure awaits.', '[]', '[]', '[]');
 INSERT INTO tour_translations (tour_id, lang, name, summary, description, stops, included, extras) VALUES (6, 'fr', 'Croisières Catamaran & Speed Boat', 'Naviguez sur les lagons turquoise, observez les dauphins et profitez d’une journée d’île en île.', 'Profitez des plus belles expériences en mer à Maurice avec nos croisières en catamaran & speed boat : dauphins, snorkeling et îles paradisiaques.', '[]', '[]', '[]');
 INSERT INTO tour_translations (tour_id, lang, name, summary, description, stops, included, extras) VALUES (6, 'ru', 'Круизы на катамаране и speed boat', 'Лазурные лагуны, дельфины и острова за один день на воде.', 'Откройте лучшие морские впечатления Маврикия с нашими круизами на катамаране и speed boat. От встречи с дельфинами до прогулок между островами, вас ждет настоящее приключение.', '[]', '[]', '[]');
-INSERT INTO media (id, r2_key, mime, bytes, alt_en, created_at) VALUES ('6ec8ba010ea59e8ca594c138', 'seed/6ec8ba010ea59e8ca594c138.jpg', 'image/jpeg', 163164, 'Catamaran & Speed Boat Cruises', 1793145600000);
+INSERT INTO media (id, r2_key, mime, bytes, width, height, alt_en, created_at) VALUES ('6ec8ba010ea59e8ca594c138', 'seed/6ec8ba010ea59e8ca594c138.jpg', 'image/jpeg', 163164, 1184, 864, 'Catamaran & Speed Boat Cruises', 1793145600000);
 INSERT INTO tour_media (tour_id, media_id, sort_order) VALUES (6, '6ec8ba010ea59e8ca594c138', 0);
 UPDATE tours SET cover_media_id = '6ec8ba010ea59e8ca594c138' WHERE id = 6;
 
@@ -46,7 +46,7 @@ INSERT INTO tours (id, slug, category, status, sort_order, price_mode, price_adu
 INSERT INTO tour_translations (tour_id, lang, name, summary, description, stops, included, extras) VALUES (7, 'en', 'Big Game Fishing', 'Head offshore with experienced skippers for a deep-sea fishing trip from top coastal spots.', 'Set out for a big game fishing experience with local crews from some of Mauritius’ best launch points, combining offshore action, local know-how, and a memorable day on the Indian Ocean.', '[]', '[]', '[]');
 INSERT INTO tour_translations (tour_id, lang, name, summary, description, stops, included, extras) VALUES (7, 'fr', 'Big Game Fishing', 'Partez au large avec des skippers expérimentés pour une sortie de pêche sportive en mer.', 'Vivez une sortie big game fishing avec des équipages locaux au départ de plusieurs zones réputées de Maurice, pour une journée offshore mêlant adrénaline, expertise et grand large.', '[]', '[]', '[]');
 INSERT INTO tour_translations (tour_id, lang, name, summary, description, stops, included, extras) VALUES (7, 'ru', 'Big Game Fishing', 'Выход в открытый океан с опытной командой для настоящей морской рыбалки.', 'Отправьтесь на big game fishing с местными экипажами из лучших точек Маврикия и проведите насыщенный день в Индийском океане, сочетая азарт, опыт команды и настоящий offshore формат.', '[]', '[]', '[]');
-INSERT INTO media (id, r2_key, mime, bytes, alt_en, created_at) VALUES ('bc8a388e83f9fe29028b1437', 'seed/bc8a388e83f9fe29028b1437.jpg', 'image/jpeg', 732673, 'Big Game Fishing', 1793145600000);
+INSERT INTO media (id, r2_key, mime, bytes, width, height, alt_en, created_at) VALUES ('bc8a388e83f9fe29028b1437', 'seed/bc8a388e83f9fe29028b1437.jpg', 'image/jpeg', 147119, 924, 924, 'Big Game Fishing', 1793145600000);
 INSERT INTO tour_media (tour_id, media_id, sort_order) VALUES (7, 'bc8a388e83f9fe29028b1437', 0);
 UPDATE tours SET cover_media_id = 'bc8a388e83f9fe29028b1437' WHERE id = 7;
 
@@ -54,7 +54,7 @@ INSERT INTO tours (id, slug, category, status, sort_order, price_mode, price_adu
 INSERT INTO tour_translations (tour_id, lang, name, summary, description, stops, included, extras) VALUES (8, 'en', 'Adventure Tours', 'Zip-lining, scenic viewpoints, and adrenaline-filled outdoor experiences.', 'Experience the thrill of Mauritius with our Adventure Tours at La Vallée des Couleurs. Zip-line over stunning landscapes and create your own custom itinerary.', '[]', '[]', '[]');
 INSERT INTO tour_translations (tour_id, lang, name, summary, description, stops, included, extras) VALUES (8, 'fr', 'Tours d''Aventure', 'Tyroliennes, points de vue panoramiques et expériences outdoor pleines d’adrénaline.', 'Vivez le frisson de Maurice avec nos tours d''aventure à La Vallée des Couleurs. Survolez des paysages magnifiques en tyrolienne et créez votre itinéraire sur mesure.', '[]', '[]', '[]');
 INSERT INTO tour_translations (tour_id, lang, name, summary, description, stops, included, extras) VALUES (8, 'ru', 'Приключенческие туры', 'Зиплайн, обзорные точки и активный отдых с выбросом адреналина.', 'Почувствуйте адреналин Маврикия в наших приключенческих турах в La Vallee des Couleurs. Пролетайте на зиплайне над красивыми пейзажами и собирайте маршрут под себя.', '[]', '[]', '[]');
-INSERT INTO media (id, r2_key, mime, bytes, alt_en, created_at) VALUES ('510769ac4c6fe6d4067c29ab', 'seed/510769ac4c6fe6d4067c29ab.jpg', 'image/jpeg', 214955, 'Adventure Tours', 1793145600000);
+INSERT INTO media (id, r2_key, mime, bytes, width, height, alt_en, created_at) VALUES ('510769ac4c6fe6d4067c29ab', 'seed/510769ac4c6fe6d4067c29ab.jpg', 'image/jpeg', 214955, 864, 1184, 'Adventure Tours', 1793145600000);
 INSERT INTO tour_media (tour_id, media_id, sort_order) VALUES (8, '510769ac4c6fe6d4067c29ab', 0);
 UPDATE tours SET cover_media_id = '510769ac4c6fe6d4067c29ab' WHERE id = 8;
 
@@ -62,7 +62,7 @@ INSERT INTO tours (id, slug, category, status, sort_order, price_mode, price_adu
 INSERT INTO tour_translations (tour_id, lang, name, summary, description, stops, included, extras) VALUES (9, 'en', 'Hiking', 'Guided hikes across iconic mountains, valleys, and hidden waterfalls.', 'Discover Mauritius on foot with our guided hiking tours. From majestic mountains to hidden waterfalls, experience the island''s natural beauty.', '[]', '[]', '[]');
 INSERT INTO tour_translations (tour_id, lang, name, summary, description, stops, included, extras) VALUES (9, 'fr', 'Randonnée', 'Randonnées guidées entre montagnes emblématiques, vallées et cascades cachées.', 'Découvrez Maurice à pied avec nos randonnées guidées. Des montagnes majestueuses aux cascades cachées, vivez la beauté naturelle de l''île.', '[]', '[]', '[]');
 INSERT INTO tour_translations (tour_id, lang, name, summary, description, stops, included, extras) VALUES (9, 'ru', 'Походы', 'Пешие маршруты с гидом по знаковым горам, долинам и скрытым водопадам.', 'Откройте Маврикий пешком в наших походах с гидом. От величественных гор до скрытых водопадов, вы увидите природную красоту острова.', '[]', '[]', '[]');
-INSERT INTO media (id, r2_key, mime, bytes, alt_en, created_at) VALUES ('5238aae74c2c5a18a37347a0', 'seed/5238aae74c2c5a18a37347a0.jpg', 'image/jpeg', 152821, 'Hiking', 1793145600000);
+INSERT INTO media (id, r2_key, mime, bytes, width, height, alt_en, created_at) VALUES ('5238aae74c2c5a18a37347a0', 'seed/5238aae74c2c5a18a37347a0.jpg', 'image/jpeg', 72388, 854, 406, 'Hiking', 1793145600000);
 INSERT INTO tour_media (tour_id, media_id, sort_order) VALUES (9, '5238aae74c2c5a18a37347a0', 0);
 UPDATE tours SET cover_media_id = '5238aae74c2c5a18a37347a0' WHERE id = 9;
 
@@ -70,49 +70,49 @@ INSERT INTO tours (id, slug, category, status, sort_order, price_mode, price_adu
 INSERT INTO tour_translations (tour_id, lang, name, summary, description, stops, included, extras) VALUES (10, 'en', 'Quad Bikes', 'Power through sugar cane trails and open landscapes with expert guidance.', 'Ride through Mauritius'' stunning landscapes on powerful quad bikes. An adrenaline-pumping adventure through sugar cane fields and coastal trails.', '[]', '[]', '[]');
 INSERT INTO tour_translations (tour_id, lang, name, summary, description, stops, included, extras) VALUES (10, 'fr', 'Quads', 'Parcourez les champs de canne et grands espaces avec un accompagnement expert.', 'Parcourez les paysages de Maurice en quad. Une aventure pleine d''adrénaline à travers les champs de canne et les sentiers côtiers.', '[]', '[]', '[]');
 INSERT INTO tour_translations (tour_id, lang, name, summary, description, stops, included, extras) VALUES (10, 'ru', 'Квадроциклы', 'Промчитесь по тропам среди сахарного тростника и открытым ландшафтам с опытным сопровождением.', 'Прокатитесь по впечатляющим ландшафтам Маврикия на мощных квадроциклах. Это насыщенное адреналином приключение через поля сахарного тростника и прибрежные тропы.', '[]', '[]', '[]');
-INSERT INTO media (id, r2_key, mime, bytes, alt_en, created_at) VALUES ('de4d683f6d3bd4cffc974edb', 'seed/de4d683f6d3bd4cffc974edb.jpg', 'image/jpeg', 190064, 'Quad Bikes', 1793145600000);
+INSERT INTO media (id, r2_key, mime, bytes, width, height, alt_en, created_at) VALUES ('de4d683f6d3bd4cffc974edb', 'seed/de4d683f6d3bd4cffc974edb.jpg', 'image/jpeg', 190064, 1184, 864, 'Quad Bikes', 1793145600000);
 INSERT INTO tour_media (tour_id, media_id, sort_order) VALUES (10, 'de4d683f6d3bd4cffc974edb', 0);
 UPDATE tours SET cover_media_id = 'de4d683f6d3bd4cffc974edb' WHERE id = 10;
 
-INSERT INTO media (id, r2_key, mime, bytes, created_at) VALUES ('6450dfab73c6ce1ca76c2163', 'seed/6450dfab73c6ce1ca76c2163.jpg', 'image/jpeg', 352524, 1793145600000);
+INSERT INTO media (id, r2_key, mime, bytes, width, height, created_at) VALUES ('6450dfab73c6ce1ca76c2163', 'seed/6450dfab73c6ce1ca76c2163.jpg', 'image/jpeg', 352524, 1280, 960, 1793145600000);
 INSERT INTO gallery_items (media_id, sort_order, created_at) VALUES ('6450dfab73c6ce1ca76c2163', 0, 1793145600000);
-INSERT INTO media (id, r2_key, mime, bytes, created_at) VALUES ('8d2fe51ba79b9ae102bb3292', 'seed/8d2fe51ba79b9ae102bb3292.jpg', 'image/jpeg', 75829, 1793145600000);
+INSERT INTO media (id, r2_key, mime, bytes, width, height, created_at) VALUES ('8d2fe51ba79b9ae102bb3292', 'seed/8d2fe51ba79b9ae102bb3292.jpg', 'image/jpeg', 75829, 1280, 960, 1793145600000);
 INSERT INTO gallery_items (media_id, sort_order, created_at) VALUES ('8d2fe51ba79b9ae102bb3292', 10, 1793145600000);
-INSERT INTO media (id, r2_key, mime, bytes, created_at) VALUES ('38e24e921039d537b3445965', 'seed/38e24e921039d537b3445965.jpg', 'image/jpeg', 300111, 1793145600000);
+INSERT INTO media (id, r2_key, mime, bytes, width, height, created_at) VALUES ('38e24e921039d537b3445965', 'seed/38e24e921039d537b3445965.jpg', 'image/jpeg', 300111, 1280, 960, 1793145600000);
 INSERT INTO gallery_items (media_id, sort_order, created_at) VALUES ('38e24e921039d537b3445965', 20, 1793145600000);
-INSERT INTO media (id, r2_key, mime, bytes, created_at) VALUES ('df1e8e0e31b011012f0dc4c6', 'seed/df1e8e0e31b011012f0dc4c6.jpg', 'image/jpeg', 139723, 1793145600000);
+INSERT INTO media (id, r2_key, mime, bytes, width, height, created_at) VALUES ('df1e8e0e31b011012f0dc4c6', 'seed/df1e8e0e31b011012f0dc4c6.jpg', 'image/jpeg', 139723, 1280, 960, 1793145600000);
 INSERT INTO gallery_items (media_id, sort_order, created_at) VALUES ('df1e8e0e31b011012f0dc4c6', 30, 1793145600000);
-INSERT INTO media (id, r2_key, mime, bytes, created_at) VALUES ('4128d6785f72b7088995ee01', 'seed/4128d6785f72b7088995ee01.jpg', 'image/jpeg', 272702, 1793145600000);
+INSERT INTO media (id, r2_key, mime, bytes, width, height, created_at) VALUES ('4128d6785f72b7088995ee01', 'seed/4128d6785f72b7088995ee01.jpg', 'image/jpeg', 272702, 960, 1280, 1793145600000);
 INSERT INTO gallery_items (media_id, sort_order, created_at) VALUES ('4128d6785f72b7088995ee01', 40, 1793145600000);
-INSERT INTO media (id, r2_key, mime, bytes, created_at) VALUES ('ab1faf058b0edacfcdbc9723', 'seed/ab1faf058b0edacfcdbc9723.jpg', 'image/jpeg', 123029, 1793145600000);
+INSERT INTO media (id, r2_key, mime, bytes, width, height, created_at) VALUES ('ab1faf058b0edacfcdbc9723', 'seed/ab1faf058b0edacfcdbc9723.jpg', 'image/jpeg', 123029, 1280, 960, 1793145600000);
 INSERT INTO gallery_items (media_id, sort_order, created_at) VALUES ('ab1faf058b0edacfcdbc9723', 50, 1793145600000);
-INSERT INTO media (id, r2_key, mime, bytes, created_at) VALUES ('1d705784f142ba29ce52692b', 'seed/1d705784f142ba29ce52692b.jpg', 'image/jpeg', 380297, 1793145600000);
+INSERT INTO media (id, r2_key, mime, bytes, width, height, created_at) VALUES ('1d705784f142ba29ce52692b', 'seed/1d705784f142ba29ce52692b.jpg', 'image/jpeg', 380297, 960, 1280, 1793145600000);
 INSERT INTO gallery_items (media_id, sort_order, created_at) VALUES ('1d705784f142ba29ce52692b', 60, 1793145600000);
-INSERT INTO media (id, r2_key, mime, bytes, created_at) VALUES ('d55dedfa18faa0bc82333065', 'seed/d55dedfa18faa0bc82333065.jpg', 'image/jpeg', 189416, 1793145600000);
+INSERT INTO media (id, r2_key, mime, bytes, width, height, created_at) VALUES ('d55dedfa18faa0bc82333065', 'seed/d55dedfa18faa0bc82333065.jpg', 'image/jpeg', 189416, 1280, 960, 1793145600000);
 INSERT INTO gallery_items (media_id, sort_order, created_at) VALUES ('d55dedfa18faa0bc82333065', 70, 1793145600000);
-INSERT INTO media (id, r2_key, mime, bytes, created_at) VALUES ('457a20418f5a7fabf299a3ca', 'seed/457a20418f5a7fabf299a3ca.jpg', 'image/jpeg', 198898, 1793145600000);
+INSERT INTO media (id, r2_key, mime, bytes, width, height, created_at) VALUES ('457a20418f5a7fabf299a3ca', 'seed/457a20418f5a7fabf299a3ca.jpg', 'image/jpeg', 198898, 720, 1280, 1793145600000);
 INSERT INTO gallery_items (media_id, sort_order, created_at) VALUES ('457a20418f5a7fabf299a3ca', 80, 1793145600000);
-INSERT INTO media (id, r2_key, mime, bytes, created_at) VALUES ('e585bed1ecb56b511caa25e3', 'seed/e585bed1ecb56b511caa25e3.jpg', 'image/jpeg', 206469, 1793145600000);
+INSERT INTO media (id, r2_key, mime, bytes, width, height, created_at) VALUES ('e585bed1ecb56b511caa25e3', 'seed/e585bed1ecb56b511caa25e3.jpg', 'image/jpeg', 206469, 960, 1280, 1793145600000);
 INSERT INTO gallery_items (media_id, sort_order, created_at) VALUES ('e585bed1ecb56b511caa25e3', 90, 1793145600000);
-INSERT INTO media (id, r2_key, mime, bytes, created_at) VALUES ('b0a8b8671e7b3f3359ea96af', 'seed/b0a8b8671e7b3f3359ea96af.jpg', 'image/jpeg', 131266, 1793145600000);
+INSERT INTO media (id, r2_key, mime, bytes, width, height, created_at) VALUES ('b0a8b8671e7b3f3359ea96af', 'seed/b0a8b8671e7b3f3359ea96af.jpg', 'image/jpeg', 131266, 1280, 720, 1793145600000);
 INSERT INTO gallery_items (media_id, sort_order, created_at) VALUES ('b0a8b8671e7b3f3359ea96af', 100, 1793145600000);
-INSERT INTO media (id, r2_key, mime, bytes, created_at) VALUES ('9dc0263a497d236d85737b50', 'seed/9dc0263a497d236d85737b50.jpg', 'image/jpeg', 206665, 1793145600000);
+INSERT INTO media (id, r2_key, mime, bytes, width, height, created_at) VALUES ('9dc0263a497d236d85737b50', 'seed/9dc0263a497d236d85737b50.jpg', 'image/jpeg', 206665, 960, 1280, 1793145600000);
 INSERT INTO gallery_items (media_id, sort_order, created_at) VALUES ('9dc0263a497d236d85737b50', 110, 1793145600000);
-INSERT INTO media (id, r2_key, mime, bytes, created_at) VALUES ('114a8df0cc6de2c89d9e8b25', 'seed/114a8df0cc6de2c89d9e8b25.jpg', 'image/jpeg', 316528, 1793145600000);
+INSERT INTO media (id, r2_key, mime, bytes, width, height, created_at) VALUES ('114a8df0cc6de2c89d9e8b25', 'seed/114a8df0cc6de2c89d9e8b25.jpg', 'image/jpeg', 316528, 960, 1280, 1793145600000);
 INSERT INTO gallery_items (media_id, sort_order, created_at) VALUES ('114a8df0cc6de2c89d9e8b25', 120, 1793145600000);
-INSERT INTO media (id, r2_key, mime, bytes, created_at) VALUES ('629fcf03ad06d424db8a5d8f', 'seed/629fcf03ad06d424db8a5d8f.jpg', 'image/jpeg', 296798, 1793145600000);
+INSERT INTO media (id, r2_key, mime, bytes, width, height, created_at) VALUES ('629fcf03ad06d424db8a5d8f', 'seed/629fcf03ad06d424db8a5d8f.jpg', 'image/jpeg', 296798, 960, 1280, 1793145600000);
 INSERT INTO gallery_items (media_id, sort_order, created_at) VALUES ('629fcf03ad06d424db8a5d8f', 130, 1793145600000);
-INSERT INTO media (id, r2_key, mime, bytes, created_at) VALUES ('b91e090a0ab1cffe4931640c', 'seed/b91e090a0ab1cffe4931640c.jpg', 'image/jpeg', 184338, 1793145600000);
+INSERT INTO media (id, r2_key, mime, bytes, width, height, created_at) VALUES ('b91e090a0ab1cffe4931640c', 'seed/b91e090a0ab1cffe4931640c.jpg', 'image/jpeg', 184338, 960, 1280, 1793145600000);
 INSERT INTO gallery_items (media_id, sort_order, created_at) VALUES ('b91e090a0ab1cffe4931640c', 140, 1793145600000);
-INSERT INTO media (id, r2_key, mime, bytes, created_at) VALUES ('8e1d1305df17ad08b6d48cc5', 'seed/8e1d1305df17ad08b6d48cc5.jpg', 'image/jpeg', 223099, 1793145600000);
+INSERT INTO media (id, r2_key, mime, bytes, width, height, created_at) VALUES ('8e1d1305df17ad08b6d48cc5', 'seed/8e1d1305df17ad08b6d48cc5.jpg', 'image/jpeg', 223099, 1280, 960, 1793145600000);
 INSERT INTO gallery_items (media_id, sort_order, created_at) VALUES ('8e1d1305df17ad08b6d48cc5', 150, 1793145600000);
-INSERT INTO media (id, r2_key, mime, bytes, created_at) VALUES ('7e62ad528f2fc06ed512e558', 'seed/7e62ad528f2fc06ed512e558.jpg', 'image/jpeg', 166135, 1793145600000);
+INSERT INTO media (id, r2_key, mime, bytes, width, height, created_at) VALUES ('7e62ad528f2fc06ed512e558', 'seed/7e62ad528f2fc06ed512e558.jpg', 'image/jpeg', 166135, 1280, 720, 1793145600000);
 INSERT INTO gallery_items (media_id, sort_order, created_at) VALUES ('7e62ad528f2fc06ed512e558', 160, 1793145600000);
-INSERT INTO media (id, r2_key, mime, bytes, created_at) VALUES ('573d61b78db345363f16cb58', 'seed/573d61b78db345363f16cb58.jpg', 'image/jpeg', 79813, 1793145600000);
+INSERT INTO media (id, r2_key, mime, bytes, width, height, created_at) VALUES ('573d61b78db345363f16cb58', 'seed/573d61b78db345363f16cb58.jpg', 'image/jpeg', 79813, 565, 753, 1793145600000);
 INSERT INTO gallery_items (media_id, sort_order, created_at) VALUES ('573d61b78db345363f16cb58', 170, 1793145600000);
-INSERT INTO media (id, r2_key, mime, bytes, created_at) VALUES ('2d675e69e1efef45980f3fd5', 'seed/2d675e69e1efef45980f3fd5.jpg', 'image/jpeg', 79859, 1793145600000);
+INSERT INTO media (id, r2_key, mime, bytes, width, height, created_at) VALUES ('2d675e69e1efef45980f3fd5', 'seed/2d675e69e1efef45980f3fd5.jpg', 'image/jpeg', 79859, 647, 863, 1793145600000);
 INSERT INTO gallery_items (media_id, sort_order, created_at) VALUES ('2d675e69e1efef45980f3fd5', 180, 1793145600000);
-INSERT INTO media (id, r2_key, mime, bytes, created_at) VALUES ('0592e250f8b4b89975667a3c', 'seed/0592e250f8b4b89975667a3c.jpg', 'image/jpeg', 109625, 1793145600000);
+INSERT INTO media (id, r2_key, mime, bytes, width, height, created_at) VALUES ('0592e250f8b4b89975667a3c', 'seed/0592e250f8b4b89975667a3c.jpg', 'image/jpeg', 109625, 565, 753, 1793145600000);
 INSERT INTO gallery_items (media_id, sort_order, created_at) VALUES ('0592e250f8b4b89975667a3c', 190, 1793145600000);
 
 INSERT INTO transfer_destinations (slug, name_en, sort_order) VALUES ('ssr-airport', 'Sir Seewoosagur Ramgoolam International Airport', 0);

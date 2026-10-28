@@ -1,6 +1,9 @@
 export interface Env {
   DB: D1Database
   MEDIA: R2Bucket
+  ASSETS: Fetcher
+  // The real address, used for canonical links and the sitemap (defaults to https://www.justlovetour.com).
+  SITE_URL?: string
   MEDIA_QUOTA_BYTES?: string
   GOOGLE_PLACES_API_KEY?: string
   GOOGLE_PLACE_ID?: string
