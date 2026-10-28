@@ -200,7 +200,7 @@ export async function loadTours(env: Env, where: { id?: number; publishedOnly?: 
           },
         ]),
     ) as Partial<Record<Lang, TourText>>,
-    media: mediaRows.filter((row) => row.tour_id === tour.id).map(({ tour_id: _tourId, ...rest }) => mediaView(rest)),
+    media: mediaRows.filter((row) => row.tour_id === tour.id).map(mediaView),
   }))
 }
 
