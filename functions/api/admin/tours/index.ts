@@ -5,7 +5,7 @@ import { childStatements, loadTours, validateTour } from '../../../_shared/tours
 
 export const onRequestGet: PagesFunction<Env, string, AdminData> = async ({ env }) => {
   try {
-    return json({ tours: await loadTours(env) })
+    return json({ tours: await loadTours(env, { includeArchived: true }) })
   } catch (error) {
     return errorResponse(error)
   }

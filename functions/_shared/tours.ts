@@ -152,7 +152,7 @@ interface TranslationRow {
   meta_description: string
 }
 
-export async function loadTours(env: Env, where: { id?: number; publishedOnly?: boolean } = {}) {
+export async function loadTours(env: Env, where: { id?: number; publishedOnly?: boolean; includeArchived?: boolean } = {}) {
   const conditions: string[] = []
   const params: unknown[] = []
   if (where.id !== undefined) {
@@ -160,8 +160,8 @@ export async function loadTours(env: Env, where: { id?: number; publishedOnly?: 
     params.push(where.id)
   }
   if (where.publishedOnly) conditions.push("tours.status = 'published'")
-  else conditions.push("tours.status != 'archived'")
-  const filter = `WHERE ${conditions.join(' AND ')}`
+  else if (!where.includeArchived && where.id === undefined) conditions.push("tours.status != 'archived'")
+  const filter = conditions.length ? `WHERE ${conditions.join(' AND ')}` : ''
 
   const [tours, texts, media] = await env.DB.batch([
     env.DB.prepare(

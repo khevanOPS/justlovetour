@@ -3,6 +3,8 @@ import { CONTENT_BLOCKS } from '../../../_shared/content'
 import { type AdminData, type Env, isLang } from '../../../_shared/env'
 import { errorResponse, HttpError, json, readJson } from '../../../_shared/http'
 
+const LABELS: Record<string, string> = { hero: 'the top of the home page', why: 'Why Just Love Tour', about: 'the About page', faq: 'the FAQ' }
+
 const blockKey = (value: string | string[] | undefined) => {
   const key = Array.isArray(value) ? value[0] : value
   if (!key || !(key in CONTENT_BLOCKS)) throw new HttpError(404, 'Unknown section')
@@ -33,7 +35,7 @@ export const onRequestPut: PagesFunction<Env, 'key', AdminData> = async ({ reque
       ).bind(key, body.lang, JSON.stringify(value), Date.now(), data.admin.id),
       auditStatement(env, {
         adminId: data.admin.id, action: 'content.update', entityType: 'content', entityId: `${key}:${body.lang}`,
-        summary: `${data.admin.name} edited the ${key} text (${body.lang.toUpperCase()})`,
+        summary: `${data.admin.name} edited ${LABELS[key] ?? key} (${body.lang.toUpperCase()})`,
         before: before ? JSON.parse(before.value) : null, after: value, ip: data.ip,
       }),
     ])

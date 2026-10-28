@@ -26,7 +26,7 @@ export const onRequestPut: PagesFunction<Env, string, AdminData> = async ({ requ
       ).bind(key, JSON.stringify(value), Date.now(), data.admin.id),
       auditStatement(env, {
         adminId: data.admin.id, action: 'settings.update', entityType: 'settings', entityId: key,
-        summary: `${data.admin.name} changed the ${key} settings`, before: before ? JSON.parse(before.value) : null, after: value, ip: data.ip,
+        summary: `${data.admin.name} changed the ${{ contact: 'contact details', socials: 'social links', currency: 'exchange rates' }[key] ?? key}`, before: before ? JSON.parse(before.value) : null, after: value, ip: data.ip,
       }),
     ])
     return json({ value })
