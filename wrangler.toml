@@ -1,0 +1,20 @@
+# Cloudflare Pages project for www.justlovetour.com.
+# Bindings here are the source of truth once this file is deployed; secrets
+# (GOOGLE_PLACES_API_KEY, GOOGLE_PLACE_ID) stay in the Pages dashboard.
+name = "justlovetour"
+pages_build_output_dir = "./dist"
+compatibility_date = "2026-10-01"
+
+[[d1_databases]]
+binding = "DB"
+database_name = "justlovetour-db"
+database_id = "ff9ddd41-b0e0-4b54-abfa-3a04a06ccf0e"
+migrations_dir = "migrations"
+
+[[r2_buckets]]
+binding = "MEDIA"
+bucket_name = "justlovetour-media"
+
+[vars]
+# Storage quota shown in the admin, in bytes (10 GB, as quoted).
+MEDIA_QUOTA_BYTES = "10737418240"
