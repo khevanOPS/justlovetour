@@ -1,4 +1,4 @@
-import type { ReactNode } from 'react'
+import { useEffect, useRef, type ReactNode } from 'react'
 import * as Dialog from '@radix-ui/react-dialog'
 import { Minus, Plus, X } from 'lucide-react'
 import type { Image, Tour } from './data'
@@ -150,5 +150,35 @@ export function Sheet({ open, onClose, title, children, wide = false }: { open: 
         </Dialog.Content>
       </Dialog.Portal>
     </Dialog.Root>
+  )
+}
+
+// Muted looping video that only downloads once it is near the screen, and stays a still photo
+// for visitors who prefer reduced motion. Phones get the lighter 720p file.
+export function BackgroundVideo({ className = '' }: { className?: string }) {
+  const ref = useRef<HTMLVideoElement>(null)
+  useEffect(() => {
+    const video = ref.current
+    if (!video || window.matchMedia('(prefers-reduced-motion: reduce)').matches) return
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        if (entry.isIntersecting) {
+          if (video.preload !== 'auto') {
+            video.preload = 'auto'
+            video.load()
+          }
+          video.play().catch(() => {})
+        } else video.pause()
+      },
+      { rootMargin: '200px' },
+    )
+    observer.observe(video)
+    return () => observer.disconnect()
+  }, [])
+  return (
+    <video ref={ref} muted loop playsInline preload="none" poster="/videos/boat-poster.jpg" aria-hidden="true" tabIndex={-1} className={`pointer-events-none object-cover ${className}`}>
+      <source src="/videos/boat-1280.mp4" type="video/mp4" media="(min-width: 768px)" />
+      <source src="/videos/boat-720.mp4" type="video/mp4" />
+    </video>
   )
 }

@@ -3,12 +3,13 @@ import { BadgeEuro, Car, ChevronLeft, ChevronRight, Compass, MapPin, Plane, Spar
 import { fetchGallery, useReviews, type Category, type GalleryPage, type Tour } from '../data'
 import { linkClick, useSite, whatsappUrl } from '../lib'
 import { pathFor, type Route } from '../routes'
-import { Chip, Eyebrow, Price, SectionTitle, TourImage, TourRow } from '../ui'
+import { BackgroundVideo, Chip, Eyebrow, Price, SectionTitle, TourImage, TourRow } from '../ui'
 
 export default function Home() {
   return (
     <>
       <Hero />
+      <VideoBanner />
       <Experiences />
       <Why />
       <Reviews />
@@ -23,14 +24,30 @@ export default function Home() {
 function Hero() {
   const { lang, t, content } = useSite()
   const hero = content.blocks.hero
+  const googleReviews = content.settings.socials?.google_reviews
   const scroller = useRef<HTMLDivElement>(null)
+  const [active, setActive] = useState(0)
   const tours = content.tours
-  const scrollBy = (direction: number) => {
+
+  const cardStep = () => {
+    const cards = scroller.current?.querySelectorAll('li')
+    return cards && cards.length > 1 ? cards[1].offsetLeft - cards[0].offsetLeft : 312
+  }
+  const goTo = (index: number) => {
     const el = scroller.current
     if (!el) return
-    const card = el.querySelector('li')
-    el.scrollBy({ left: direction * ((card?.clientWidth ?? 300) + 16), behavior: 'smooth' })
+    const target = Math.max(0, Math.min(tours.length - 1, index))
+    el.scrollTo({ left: target * cardStep(), behavior: 'smooth' })
   }
+  const onScroll = () => {
+    const el = scroller.current
+    if (!el) return
+    // At the far right the last cards can't snap to the start, so count that as the last card.
+    const atEnd = el.scrollLeft + el.clientWidth >= el.scrollWidth - 4
+    setActive(atEnd ? tours.length - 1 : Math.round(el.scrollLeft / cardStep()))
+  }
+
+  const arrow = 'flex h-11 w-11 shrink-0 items-center justify-center rounded-full bg-white text-slate-800 shadow-md hover:bg-teal-50 disabled:opacity-40'
 
   return (
     <section aria-labelledby="hero-title">
@@ -40,12 +57,23 @@ function Hero() {
           <h1 id="hero-title" className="max-w-2xl font-serif text-[34px] font-bold leading-[1.12] md:text-6xl">
             {hero?.title || t.heroTitle}
           </h1>
-          {hero?.travellers && <p className="text-[13px] text-white/85 md:text-base">{t.travellers(hero.travellers)}</p>}
+          {hero?.travellers && (
+            <p className="text-[13px] text-white/85 md:text-base">
+              {t.travellers(hero.travellers)}{' '}
+              {googleReviews ? (
+                <a href={googleReviews} target="_blank" rel="noopener" className="font-semibold text-white underline decoration-white/50 underline-offset-2 hover:decoration-white">
+                  Google
+                </a>
+              ) : (
+                'Google'
+              )}
+            </p>
+          )}
         </div>
       </div>
 
       <div className="relative mx-auto -mt-[56px] max-w-6xl md:-mt-16">
-        <div ref={scroller} className="no-scrollbar snap-x snap-mandatory overflow-x-auto scroll-px-4 px-4 pb-4">
+        <div ref={scroller} onScroll={onScroll} className="no-scrollbar snap-x snap-mandatory overflow-x-auto scroll-px-4 px-4 pb-4">
           <ul className="flex gap-3 md:gap-4" aria-label={t.experiencesTitle}>
             {tours.map((tour, index) => (
               <HeroCard key={tour.slug} tour={tour} eager={index < 2} />
@@ -54,11 +82,28 @@ function Hero() {
         </div>
         {tours.length > 3 && (
           <div className="pointer-events-none absolute inset-y-0 left-0 right-0 hidden items-center justify-between md:flex">
-            <button type="button" aria-label={t.prevTour} onClick={() => scrollBy(-1)} className="pointer-events-auto -ml-5 flex h-12 w-12 items-center justify-center rounded-full bg-white text-slate-800 shadow-lg hover:bg-teal-50">
+            <button type="button" aria-label={t.prevTour} onClick={() => goTo(active - 3)} className={`pointer-events-auto -ml-5 h-12 w-12 ${arrow}`}>
               <ChevronLeft className="h-6 w-6" aria-hidden="true" />
             </button>
-            <button type="button" aria-label={t.nextTour} onClick={() => scrollBy(1)} className="pointer-events-auto -mr-5 flex h-12 w-12 items-center justify-center rounded-full bg-white text-slate-800 shadow-lg hover:bg-teal-50">
+            <button type="button" aria-label={t.nextTour} onClick={() => goTo(active + 3)} className={`pointer-events-auto -mr-5 h-12 w-12 ${arrow}`}>
               <ChevronRight className="h-6 w-6" aria-hidden="true" />
+            </button>
+          </div>
+        )}
+        {tours.length > 1 && (
+          <div className="flex items-center justify-between gap-3 px-4 pb-2 md:hidden">
+            <button type="button" aria-label={t.prevTour} disabled={active === 0} onClick={() => goTo(active - 1)} className={arrow}>
+              <ChevronLeft className="h-5 w-5" aria-hidden="true" />
+            </button>
+            <div className="flex flex-wrap justify-center gap-0.5">
+              {tours.map((tour, index) => (
+                <button key={tour.slug} type="button" aria-label={t.showTour(index + 1)} aria-current={index === active ? 'true' : undefined} onClick={() => goTo(index)} className="flex h-6 w-5 items-center justify-center">
+                  <span className={`block h-2 rounded-full transition-all ${index === active ? 'w-5 bg-teal-600' : 'w-2 bg-slate-300'}`} />
+                </button>
+              ))}
+            </div>
+            <button type="button" aria-label={t.nextTour} disabled={active >= tours.length - 1} onClick={() => goTo(active + 1)} className={arrow}>
+              <ChevronRight className="h-5 w-5" aria-hidden="true" />
             </button>
           </div>
         )}
@@ -115,6 +160,31 @@ function HeroCard({ tour, eager }: { tour: Tour; eager: boolean }) {
         </div>
       </article>
     </li>
+  )
+}
+
+function VideoBanner() {
+  const { t } = useSite()
+  return (
+    <section aria-labelledby="video-title" className="mx-auto max-w-6xl px-4 pt-10 md:pt-16">
+      <div className="relative h-[260px] overflow-hidden rounded-3xl bg-[#0e7490] md:h-[420px]">
+        <BackgroundVideo className="absolute inset-0 h-full w-full" />
+        <div className="absolute inset-0 flex flex-col justify-end gap-2 bg-gradient-to-t from-slate-900/75 via-slate-900/20 to-transparent p-5 text-white md:p-10">
+          <h2 id="video-title" className="max-w-lg font-serif text-[26px] font-bold leading-tight md:text-5xl">{t.videoTitle}</h2>
+          <p className="max-w-md text-sm text-white/90 md:text-lg">{t.videoText}</p>
+          <a
+            href="#activities"
+            onClick={(event) => {
+              event.preventDefault()
+              document.getElementById('activities')?.scrollIntoView({ behavior: 'smooth' })
+            }}
+            className="mt-2 inline-flex h-11 w-fit items-center rounded-xl bg-white px-5 text-sm font-semibold text-teal-800 hover:bg-teal-50"
+          >
+            {t.videoCta} →
+          </a>
+        </div>
+      </div>
+    </section>
   )
 }
 

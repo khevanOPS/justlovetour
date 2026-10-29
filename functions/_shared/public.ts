@@ -9,7 +9,7 @@ export async function publicContent(env: Env, lang: Lang) {
     loadTours(env, { publishedOnly: true }),
     env.DB.batch([
       env.DB.prepare("SELECT key, lang, value FROM content_blocks WHERE lang IN (?1, 'en')").bind(lang),
-      env.DB.prepare("SELECT key, value FROM settings WHERE key IN ('contact', 'socials', 'currency')"),
+      env.DB.prepare("SELECT key, value FROM settings WHERE key IN ('contact', 'socials', 'currency', 'currency_auto')"),
       env.DB.prepare(
         `SELECT transfer_destinations.slug, transfer_destinations.name_en, transfer_destinations.name_fr, transfer_destinations.name_ru, media.r2_key
          FROM transfer_destinations LEFT JOIN media ON media.id = transfer_destinations.media_id
@@ -29,7 +29,9 @@ export async function publicContent(env: Env, lang: Lang) {
     blocks[key] = empty ? parse(english?.value, null) : value
   }
 
-  const settings = Object.fromEntries(((settingsResult.results ?? []) as { key: string; value: string }[]).map((row) => [row.key, parse(row.value, null)]))
+  const settings: Record<string, unknown> = Object.fromEntries(((settingsResult.results ?? []) as { key: string; value: string }[]).map((row) => [row.key, parse(row.value, null as unknown)]))
+  settings.currency = await currencyRates(env, settings.currency as ManualRates | null, settings.currency_auto as AutoRates | null)
+  delete settings.currency_auto
 
   return {
     lang,
@@ -87,5 +89,45 @@ export async function publicGallery(env: Env, lang: Lang, page: number, perPage:
       const view = mediaView(row)
       return { ...view, tour_id: row.tour_id, alt: view.alt[lang] || view.alt.en }
     }),
+  }
+}
+
+// ---- Exchange rates. Rates typed in the admin win; otherwise a free daily feed fills them in.
+
+interface ManualRates {
+  usd_per_eur: number | null
+  mur_per_eur: number | null
+}
+interface AutoRates extends ManualRates {
+  checked_at: number
+}
+
+const RATES_URL = 'https://open.er-api.com/v6/latest/EUR'
+const DAY = 86_400_000
+const HOUR = 3_600_000
+
+async function currencyRates(env: Env, manual: ManualRates | null, auto: AutoRates | null) {
+  let rates = auto
+  if (!(manual?.usd_per_eur && manual?.mur_per_eur) && (!auto || Date.now() - auto.checked_at > DAY)) {
+    try {
+      const response = await fetch(RATES_URL, { signal: AbortSignal.timeout(2500) })
+      const data = (await response.json()) as { result?: string; rates?: Record<string, number> }
+      if (data.result !== 'success' || !data.rates?.USD || !data.rates?.MUR) throw new Error('rates feed returned no USD/MUR')
+      rates = { usd_per_eur: data.rates.USD, mur_per_eur: data.rates.MUR, checked_at: Date.now() }
+    } catch {
+      // Keep yesterday's rates and try again in an hour rather than on every visit.
+      rates = { usd_per_eur: auto?.usd_per_eur ?? null, mur_per_eur: auto?.mur_per_eur ?? null, checked_at: Date.now() - DAY + HOUR }
+    }
+    await env.DB.prepare(
+      `INSERT INTO settings (key, value, updated_at) VALUES ('currency_auto', ?1, ?2)
+       ON CONFLICT(key) DO UPDATE SET value = excluded.value, updated_at = excluded.updated_at`,
+    )
+      .bind(JSON.stringify(rates), Date.now())
+      .run()
+  }
+  return {
+    default: 'EUR' as const,
+    usd_per_eur: manual?.usd_per_eur || rates?.usd_per_eur || null,
+    mur_per_eur: manual?.mur_per_eur || rates?.mur_per_eur || null,
   }
 }

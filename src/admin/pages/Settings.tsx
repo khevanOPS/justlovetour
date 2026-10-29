@@ -9,6 +9,8 @@ type Settings = {
   contact: { whatsapp: string; phone_display: string; email: string; location: string }
   socials: { instagram: string; facebook: string; youtube: string; google_reviews: string }
   currency: { usd_per_eur: number | string | null; mur_per_eur: number | string | null }
+  // Written by the website itself once a day; read-only here.
+  currency_auto?: { usd_per_eur: number | null; mur_per_eur: number | null; checked_at: number }
 }
 
 export default function SettingsPage() {
@@ -37,7 +39,7 @@ export default function SettingsPage() {
     <div className="flex justify-end"><Button disabled={busy === key} onClick={() => save(key)} className="h-11 min-w-28 bg-teal-600 hover:bg-teal-700">{busy === key ? 'Saving…' : 'Save'}</Button></div>
   )
 
-  const { contact, socials, currency } = settings
+  const { contact, socials, currency, currency_auto: autoRates } = settings
   const usd = Number(currency.usd_per_eur)
   const mur = Number(currency.mur_per_eur)
 
@@ -66,13 +68,13 @@ export default function SettingsPage() {
         {saveButton('socials')}
       </Section>
 
-      <Section title="Exchange rates" hint="Prices are entered in euros. Visitors who choose US dollars or rupees see them converted with these rates.">
+      <Section title="Exchange rates" hint="Prices are entered in euros. Visitors can switch to US dollars or rupees. Leave these empty to use automatic rates, updated daily; type a rate to fix it yourself.">
         <div className="grid gap-4 sm:grid-cols-2">
           <Field label="1 euro = how many US dollars" id="usd"><Input id="usd" className="h-11" inputMode="decimal" placeholder="e.g. 1.08" value={currency.usd_per_eur ?? ''} onChange={(e) => set('currency', { usd_per_eur: e.target.value })} /></Field>
           <Field label="1 euro = how many Mauritian rupees" id="mur"><Input id="mur" className="h-11" inputMode="decimal" placeholder="e.g. 50.5" value={currency.mur_per_eur ?? ''} onChange={(e) => set('currency', { mur_per_eur: e.target.value })} /></Field>
         </div>
         {usd > 0 && mur > 0 && <p className="text-sm text-gray-600">Example: a €150 tour shows as ${Math.round(150 * usd)} or Rs {Math.round(150 * mur).toLocaleString('en')}.</p>}
-        {(!usd || !mur) && <p className="text-sm text-amber-700">Until both rates are set, the currency switch on the website only offers euros.</p>}
+        {(!usd || !mur) && <p className="text-sm text-gray-600">Empty rates use the automatic daily rate{autoRates?.usd_per_eur ? ` (today: $${autoRates.usd_per_eur.toFixed(2)} and Rs ${autoRates.mur_per_eur?.toFixed(2)} per euro)` : ''}.</p>}
         {saveButton('currency')}
       </Section>
     </div>

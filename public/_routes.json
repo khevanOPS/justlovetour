@@ -1,5 +1,5 @@
 {
   "version": 1,
   "include": ["/*"],
-  "exclude": ["/assets/*", "/images/*", "/favicon.svg", "/apple-touch-icon.png", "/logo-512.jpg", "/og-image.jpg", "/admin", "/admin.html"]
+  "exclude": ["/assets/*", "/images/*", "/videos/*", "/favicon.svg", "/apple-touch-icon.png", "/logo-512.jpg", "/og-image.jpg", "/admin", "/admin.html"]
 }

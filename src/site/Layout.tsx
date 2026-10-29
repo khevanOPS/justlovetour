@@ -1,6 +1,7 @@
 import { useState, type ReactNode } from 'react'
 import { Heart, Mail, MapPin, Menu, Phone, X } from 'lucide-react'
 import * as Dialog from '@radix-ui/react-dialog'
+import { BackgroundVideo } from './ui'
 import { availableCurrencies, go, linkClick, socialLinks, useSite, whatsappUrl, type Currency } from './lib'
 import { LANG_LABEL, LANG_NAME, LANGS, type Lang } from './i18n'
 import { pathFor, type Page, type Route } from './routes'
@@ -149,7 +150,9 @@ export function Footer({ route }: { route: Route }) {
   const { t, content } = useSite()
   const contact = content.settings.contact
   return (
-    <footer className="bg-slate-900 pb-24 pt-10 text-slate-300 md:pb-10">
+    <footer className="relative isolate overflow-hidden bg-slate-900 pb-24 pt-10 text-slate-300 md:pb-10">
+      <BackgroundVideo className="absolute inset-0 -z-20 h-full w-full" />
+      <div aria-hidden="true" className="absolute inset-0 -z-10 bg-gradient-to-b from-slate-950/60 via-slate-950/70 to-slate-950/90" />
       <div className="mx-auto grid max-w-6xl gap-8 px-4 md:grid-cols-[1.4fr_1fr_1fr]">
         <div className="space-y-3">
           <p className="flex items-center gap-2 text-[17px] font-semibold text-white">
@@ -189,10 +192,11 @@ export function Footer({ route }: { route: Route }) {
         </div>
       </div>
       <p className="mx-auto mt-10 max-w-6xl px-4 text-center text-xs text-slate-400">
-        {t.developedBy}{' '}
-        <a href="https://kpmstudios.com" target="_blank" rel="noopener" className="underline-offset-2 hover:text-white hover:underline">
-          kpmstudios.com
+        © {new Date().getFullYear()} All rights reserved Just Love Tour. Developed by{' '}
+        <a href="https://share.google/t3i4bB7dDgzouBM7c" target="_blank" rel="noopener noreferrer" className="underline-offset-2 hover:text-white hover:underline">
+          KPM Studios Ltd
         </a>
+        .
       </p>
     </footer>
   )

@@ -146,7 +146,7 @@ export function bodyHtml(route: Route, meta: PageMeta, content: Content, gallery
     const hero = content.blocks.hero
     const faq = (content.blocks.faq ?? []).filter((item) => item.q && item.a)
     main =
-      band(hero?.title || t.heroTitle, hero?.travellers ? t.travellers(hero.travellers) : '', hero?.eyebrow || t.heroEyebrow) +
+      band(hero?.title || t.heroTitle, hero?.travellers ? `${t.travellers(hero.travellers)} Google` : '', hero?.eyebrow || t.heroEyebrow) +
       `<div class="mx-auto max-w-6xl px-4 py-8"><section id="activities"><h2>${esc(t.experiencesTitle)}</h2><ul>${content.tours.map(tourCard).join('')}</ul></section>` +
       (content.blocks.why?.length ? `<section><h2>${esc(t.whyEyebrow)}</h2><ul>${content.blocks.why.map((w) => `<li><strong>${esc(w.title)}</strong> ${esc(w.text)}</li>`).join('')}</ul></section>` : '') +
       `<section><h2>${esc(t.planEyebrow)}</h2><p>${link(p('planner'), t.planTrip)} · ${link(p('transfers'), t.transferCardTitle)}</p></section>` +
@@ -181,7 +181,7 @@ export function bodyHtml(route: Route, meta: PageMeta, content: Content, gallery
     main = band(t.contactTitle, t.contactIntro) + `<div class="mx-auto max-w-6xl px-4 py-8">${contactHtml(content)}</div>`
   }
 
-  const footer = `<footer class="bg-slate-900 px-4 py-10 text-slate-300"><nav aria-label="Footer">${SITE_PAGES.map((page) => link(p(page), navNames[page])).join(' · ')}</nav>${contactHtml(content)}<p>${esc(t.developedBy)} <a href="https://kpmstudios.com">kpmstudios.com</a></p></footer>`
+  const footer = `<footer class="bg-slate-900 px-4 py-10 text-slate-300"><nav aria-label="Footer">${SITE_PAGES.map((page) => link(p(page), navNames[page])).join(' · ')}</nav>${contactHtml(content)}<p>© ${new Date().getFullYear()} All rights reserved Just Love Tour. Developed by <a href="https://share.google/t3i4bB7dDgzouBM7c" target="_blank" rel="noopener noreferrer">KPM Studios Ltd</a>.</p></footer>`
   return `<div class="flex min-h-screen flex-col bg-[#f6f8f5] text-slate-900">${header}<main id="main" class="flex-1">${main}</main>${footer}</div>`
 }
 

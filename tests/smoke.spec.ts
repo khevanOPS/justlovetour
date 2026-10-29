@@ -26,6 +26,7 @@ test('pages arrive with their text and Google tags before the app runs', async (
   expect(html).toContain('hreflang="x-default"')
   expect(html).toContain('"@type":"TouristTrip"')
   expect(html).toContain('Trou aux Cerfs')
+  expect(html).toContain('Developed by <a href="https://share.google/t3i4bB7dDgzouBM7c"')
 
   expect((await request.get('/tours/does-not-exist')).status()).toBe(404)
   const redirect = await request.get('/about/', { maxRedirects: 0 })
