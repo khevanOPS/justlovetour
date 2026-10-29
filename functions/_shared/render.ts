@@ -181,7 +181,7 @@ export function bodyHtml(route: Route, meta: PageMeta, content: Content, gallery
     main = band(t.contactTitle, t.contactIntro) + `<div class="mx-auto max-w-6xl px-4 py-8">${contactHtml(content)}</div>`
   }
 
-  const footer = `<footer class="bg-slate-900 px-4 py-10 text-slate-300"><nav aria-label="Footer">${SITE_PAGES.map((page) => link(p(page), navNames[page])).join(' · ')}</nav>${contactHtml(content)}<p>© ${new Date().getFullYear()} All rights reserved Just Love Tour. Developed by <a href="https://share.google/t3i4bB7dDgzouBM7c" target="_blank" rel="noopener noreferrer">KPM Studios Ltd</a>.</p></footer>`
+  const footer = `<footer class="bg-slate-900 px-4 py-10 text-slate-300"><nav aria-label="Footer">${SITE_PAGES.map((page) => link(p(page), navNames[page])).join(' · ')}</nav>${contactHtml(content)}<p>© ${new Date().getFullYear()} All rights reserved Just Love Tour. Developed by <a href="https://share.google/t3i4bB7dDgzouBM7c" target="_blank" rel="noopener noreferrer">KPM Studios Ltd</a>. Video by <a href="https://www.vecteezy.com/video/84102856-boat-towing-two-people-on-inflatable-tube-across-blue-sea" target="_blank" rel="noopener noreferrer">Vecteezy</a></p></footer>`
   return `<div class="flex min-h-screen flex-col bg-[#f6f8f5] text-slate-900">${header}<main id="main" class="flex-1">${main}</main>${footer}</div>`
 }
 

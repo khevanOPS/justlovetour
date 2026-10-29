@@ -167,18 +167,21 @@ function VideoBanner() {
   const { t } = useSite()
   return (
     <section aria-labelledby="video-title" className="mx-auto max-w-6xl px-4 pt-10 md:pt-16">
-      <div className="relative h-[260px] overflow-hidden rounded-3xl bg-[#0e7490] md:h-[420px]">
-        <BackgroundVideo className="absolute inset-0 h-full w-full" />
-        <div className="absolute inset-0 flex flex-col justify-end gap-2 bg-gradient-to-t from-slate-900/75 via-slate-900/20 to-transparent p-5 text-white md:p-10">
-          <h2 id="video-title" className="max-w-lg font-serif text-[26px] font-bold leading-tight md:text-5xl">{t.videoTitle}</h2>
-          <p className="max-w-md text-sm text-white/90 md:text-lg">{t.videoText}</p>
+      {/* Phones: the video stays clear and the words sit underneath. Bigger screens: words over the video. */}
+      <div className="overflow-hidden rounded-3xl bg-[#134e4a] md:relative md:h-[420px] md:bg-[#0e7490]">
+        <div className="relative aspect-[16/10] md:absolute md:inset-0 md:aspect-auto">
+          <BackgroundVideo controls className="absolute inset-0 h-full w-full" />
+        </div>
+        <div className="flex flex-col gap-2 p-5 text-white md:absolute md:inset-x-0 md:bottom-0 md:bg-gradient-to-t md:from-slate-900/75 md:via-slate-900/30 md:to-transparent md:p-10 md:pt-24">
+          <h2 id="video-title" className="max-w-lg font-serif text-2xl font-bold leading-tight md:text-5xl">{t.videoTitle}</h2>
+          <p className="hidden max-w-md text-white/90 md:block md:text-lg">{t.videoText}</p>
           <a
             href="#activities"
             onClick={(event) => {
               event.preventDefault()
               document.getElementById('activities')?.scrollIntoView({ behavior: 'smooth' })
             }}
-            className="mt-2 inline-flex h-11 w-fit items-center rounded-xl bg-white px-5 text-sm font-semibold text-teal-800 hover:bg-teal-50"
+            className="mt-1 inline-flex h-11 w-fit items-center rounded-xl bg-white px-5 text-sm font-semibold text-teal-800 hover:bg-teal-50 md:mt-2"
           >
             {t.videoCta} →
           </a>

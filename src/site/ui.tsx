@@ -1,6 +1,6 @@
-import { useEffect, useRef, type ReactNode } from 'react'
+import { useEffect, useRef, useState, type ReactNode } from 'react'
 import * as Dialog from '@radix-ui/react-dialog'
-import { Minus, Plus, X } from 'lucide-react'
+import { Minus, Pause, Play, Plus, X } from 'lucide-react'
 import type { Image, Tour } from './data'
 import { linkClick, priceLabel, useSite } from './lib'
 import { pathFor } from './routes'
@@ -153,13 +153,21 @@ export function Sheet({ open, onClose, title, children, wide = false }: { open: 
   )
 }
 
-// Muted looping video that only downloads once it is near the screen, and stays a still photo
-// for visitors who prefer reduced motion. Phones get the lighter 720p file.
-export function BackgroundVideo({ className = '' }: { className?: string }) {
+// Muted looping video that only downloads once it is near the screen. Phones get the lighter 720p file.
+// Visitors who prefer reduced motion see the still photo until they press play.
+export function BackgroundVideo({ className = '', controls = false }: { className?: string; controls?: boolean }) {
+  const { t } = useSite()
   const ref = useRef<HTMLVideoElement>(null)
+  const [paused, setPaused] = useState(() => typeof window !== 'undefined' && window.matchMedia('(prefers-reduced-motion: reduce)').matches)
+  const pausedRef = useRef(paused)
+
   useEffect(() => {
     const video = ref.current
-    if (!video || window.matchMedia('(prefers-reduced-motion: reduce)').matches) return
+    if (!video) return
+    // React does not write the muted attribute, and Safari refuses to autoplay without it.
+    video.defaultMuted = true
+    video.muted = true
+    video.setAttribute('muted', '')
     const observer = new IntersectionObserver(
       ([entry]) => {
         if (entry.isIntersecting) {
@@ -167,7 +175,7 @@ export function BackgroundVideo({ className = '' }: { className?: string }) {
             video.preload = 'auto'
             video.load()
           }
-          video.play().catch(() => {})
+          if (!pausedRef.current) video.play().catch(() => {})
         } else video.pause()
       },
       { rootMargin: '200px' },
@@ -175,10 +183,31 @@ export function BackgroundVideo({ className = '' }: { className?: string }) {
     observer.observe(video)
     return () => observer.disconnect()
   }, [])
+
+  const toggle = () => {
+    const video = ref.current
+    if (!video) return
+    if (paused) {
+      video.preload = 'auto'
+      video.play().catch(() => {})
+    } else video.pause()
+    pausedRef.current = !paused
+    setPaused(!paused)
+  }
+
   return (
-    <video ref={ref} muted loop playsInline preload="none" poster="/videos/boat-poster.jpg" aria-hidden="true" tabIndex={-1} className={`pointer-events-none object-cover ${className}`}>
-      <source src="/videos/boat-1280.mp4" type="video/mp4" media="(min-width: 768px)" />
-      <source src="/videos/boat-720.mp4" type="video/mp4" />
-    </video>
+    <>
+      <video ref={ref} muted autoPlay={!paused} loop playsInline preload="none" poster="/videos/boat-poster.jpg" aria-hidden="true" tabIndex={-1} className={`pointer-events-none object-cover ${className}`}>
+        <source src="/videos/boat-1280.mp4" type="video/mp4" media="(min-width: 768px)" />
+        <source src="/videos/boat-720.mp4" type="video/mp4" />
+      </video>
+      {controls && (
+        <button type="button" onClick={toggle} aria-label={paused ? t.playBackground : t.pauseVideo} className="absolute right-3 top-3 z-10 flex h-10 w-10 items-center justify-center rounded-full bg-slate-900/45 text-white backdrop-blur hover:bg-slate-900/65">
+          {paused ? <Play className="h-4 w-4" aria-hidden="true" /> : <Pause className="h-4 w-4" aria-hidden="true" />}
+        </button>
+      )}
+    </>
   )
 }
+
+export const VIDEO_CREDIT_URL = 'https://www.vecteezy.com/video/84102856-boat-towing-two-people-on-inflatable-tube-across-blue-sea'

@@ -1,7 +1,7 @@
 import { useState, type ReactNode } from 'react'
 import { Heart, Mail, MapPin, Menu, Phone, X } from 'lucide-react'
 import * as Dialog from '@radix-ui/react-dialog'
-import { BackgroundVideo } from './ui'
+import { BackgroundVideo, VIDEO_CREDIT_URL } from './ui'
 import { availableCurrencies, go, linkClick, socialLinks, useSite, whatsappUrl, type Currency } from './lib'
 import { LANG_LABEL, LANG_NAME, LANGS, type Lang } from './i18n'
 import { pathFor, type Page, type Route } from './routes'
@@ -197,6 +197,12 @@ export function Footer({ route }: { route: Route }) {
           KPM Studios Ltd
         </a>
         .
+        <span className="mt-1 block text-slate-500">
+          {t.videoCredit}{' '}
+          <a href={VIDEO_CREDIT_URL} target="_blank" rel="noopener noreferrer" className="underline-offset-2 hover:text-white hover:underline">
+            Vecteezy
+          </a>
+        </span>
       </p>
     </footer>
   )
