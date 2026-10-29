@@ -10,7 +10,8 @@
     "preview": "vite preview",
     "test:e2e": "playwright test",
     "local:setup": "wrangler d1 migrations apply justlovetour-db --local && node scripts/upload-seed-media.mjs --local && node scripts/create-admin.mjs --email admin@localhost.test --name Tester",
-    "local": "npm run build && wrangler pages dev dist --port 8788 --ip 0.0.0.0"
+    "local": "npm run build && wrangler pages dev dist --port 8788 --ip 0.0.0.0",
+    "local:update": "wrangler d1 migrations apply justlovetour-db --local && node scripts/upload-seed-media.mjs --local"
   },
   "dependencies": {
     "@hookform/resolvers": "^5.2.2",

@@ -75,7 +75,7 @@ export const tours = [
     price: { adult: 15000, child: 8000 },
     start: '09:00',
     end: '17:00',
-    images: [],
+    images: ['/images/la-route-du-the/main.jpg'],
     text: {
       en: {
         name: 'La Route du Thé',
@@ -104,7 +104,7 @@ export const tours = [
     price: { adult: 7500, child: 5000 },
     start: null,
     end: null,
-    images: [],
+    images: ['/images/personalised-tours/main.jpg'],
     text: {
       en: {
         name: 'Personalised Tours',
