@@ -9,7 +9,7 @@ export async function publicContent(env: Env, lang: Lang) {
     loadTours(env, { publishedOnly: true }),
     env.DB.batch([
       env.DB.prepare("SELECT key, lang, value FROM content_blocks WHERE lang IN (?1, 'en')").bind(lang),
-      env.DB.prepare("SELECT key, value FROM settings WHERE key IN ('contact', 'socials', 'currency', 'currency_auto')"),
+      env.DB.prepare("SELECT key, value FROM settings WHERE key IN ('contact', 'socials', 'currency', 'currency_auto', 'banner')"),
       env.DB.prepare(
         `SELECT transfer_destinations.slug, transfer_destinations.name_en, transfer_destinations.name_fr, transfer_destinations.name_ru, media.r2_key
          FROM transfer_destinations LEFT JOIN media ON media.id = transfer_destinations.media_id

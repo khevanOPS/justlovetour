@@ -58,3 +58,19 @@
     @apply backdrop-blur-md bg-white/10 border border-white/20;
   }
 }
+
+/* Bottom banner: endless scroll plus a light sweep. Both stop for visitors who prefer less motion. */
+@keyframes jlt-marquee {
+  from { transform: translateX(0); }
+  to { transform: translateX(-50%); }
+}
+@keyframes jlt-sweep {
+  0% { transform: translateX(-120%) skewX(-20deg); }
+  45%, 100% { transform: translateX(420%) skewX(-20deg); }
+}
+.jlt-marquee { animation: jlt-marquee var(--marquee-duration, 30s) linear infinite; }
+.jlt-marquee-wrap:hover .jlt-marquee { animation-play-state: paused; }
+.jlt-sweep { animation: jlt-sweep 4.5s ease-in-out infinite; }
+@media (prefers-reduced-motion: reduce) {
+  .jlt-marquee, .jlt-sweep { animation: none; }
+}

@@ -45,6 +45,7 @@ export interface Content {
     contact?: { whatsapp: string; phone_display: string; email: string; location: string } | null
     socials?: { instagram: string; facebook: string; youtube: string; google_reviews: string } | null
     currency?: { default: 'EUR'; usd_per_eur: number | null; mur_per_eur: number | null } | null
+    banner?: { enabled: boolean; text: { en: string; fr: string; ru: string }; link: string } | null
   }
   destinations: { slug: string; name: string; image: string | null }[]
 }

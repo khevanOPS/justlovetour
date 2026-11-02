@@ -1,10 +1,10 @@
-import { useState, type ReactNode } from 'react'
+import { useEffect, useState, type ReactNode } from 'react'
 import { Heart, Mail, MapPin, Menu, Phone, X } from 'lucide-react'
 import * as Dialog from '@radix-ui/react-dialog'
 import { BackgroundVideo, VIDEO_CREDIT_URL } from './ui'
 import { availableCurrencies, go, linkClick, socialLinks, useSite, whatsappUrl, type Currency } from './lib'
 import { LANG_LABEL, LANG_NAME, LANGS, type Lang } from './i18n'
-import { pathFor, type Page, type Route } from './routes'
+import { parseRoute, pathFor, type Page, type Route } from './routes'
 
 const NAV: { page: Page; key: keyof ReturnType<typeof useSite>['t']['nav'] }[] = [
   { page: 'home', key: 'home' },
@@ -129,6 +129,87 @@ export function Header({ route }: { route: Route }) {
   )
 }
 
+const BANNER_CLOSED_KEY = 'jlt_banner_closed'
+
+// Scrolling strip along the bottom of every page, written by the admins under Settings.
+// Closing it hides it until the admins change the text.
+function BottomBanner() {
+  const { lang, t, content } = useSite()
+  const banner = content.settings.banner
+  const text = banner?.enabled ? banner.text[lang] || banner.text.en : ''
+  const [closed, setClosed] = useState<string | null>(() => {
+    try {
+      return localStorage.getItem(BANNER_CLOSED_KEY)
+    } catch {
+      return null
+    }
+  })
+  const visible = Boolean(text) && closed !== banner?.text.en
+
+  // Lifts the WhatsApp button and leaves room under the footer while the strip is showing.
+  useEffect(() => {
+    document.documentElement.style.setProperty('--banner-h', visible ? '40px' : '0px')
+  }, [visible])
+
+  if (!visible || !banner) return null
+  const close = () => {
+    try {
+      localStorage.setItem(BANNER_CLOSED_KEY, banner.text.en)
+    } catch {
+      // Private mode: it just comes back on the next visit.
+    }
+    setClosed(banner.text.en)
+  }
+  const parts = text.split('·').map((part) => part.trim()).filter(Boolean)
+  const run = (copy: number) => (
+    <span aria-hidden={copy > 0 || undefined} className="flex shrink-0 items-center">
+      {parts.map((part, i) => (
+        <span key={i} className="flex items-center whitespace-nowrap">
+          <span className="px-5">{part}</span>
+          <Heart className="h-3 w-3 fill-amber-300 text-amber-300" aria-hidden="true" />
+        </span>
+      ))}
+    </span>
+  )
+  // Two identical halves scroll by half their width, so the loop never shows a seam.
+  const strip = (
+    <span className="jlt-marquee flex w-max" style={{ ['--marquee-duration' as string]: `${Math.max(18, text.length * 0.28)}s` }}>
+      {run(0)}
+      {run(1)}
+      {run(2)}
+      {run(3)}
+    </span>
+  )
+  // A page of this site opens in the visitor's language unless the link names one.
+  const internal = banner.link.startsWith('/')
+  const target = internal ? (() => {
+    const url = new URL(banner.link, window.location.origin)
+    const route = parseRoute(url.pathname, url.search)
+    return /^\/(fr|ru)(\/|$)/.test(url.pathname) ? route : { ...route, lang }
+  })() : null
+  const link = target ? pathFor(target) : banner.link
+  return (
+    <>
+      <div aria-hidden="true" className="h-10" />
+      <aside aria-label={t.bannerLabel} className="fixed inset-x-0 bottom-0 z-40 flex h-10 items-center bg-gradient-to-r from-[#0f3d3a] via-[#134e4a] to-[#0e7490] pb-[env(safe-area-inset-bottom)] text-[13px] font-medium text-white shadow-[0_-6px_20px_rgba(0,0,0,0.18)]">
+        <div className="jlt-marquee-wrap relative h-full flex-1 overflow-hidden">
+          <span aria-hidden="true" className="jlt-sweep pointer-events-none absolute inset-y-0 left-0 z-10 w-1/4 bg-gradient-to-r from-transparent via-white/30 to-transparent" />
+          {link ? (
+            <a href={link} {...(target ? {} : { target: '_blank', rel: 'noopener' })} onClick={target ? (event) => { event.preventDefault(); go(target) } : undefined} className="flex h-full items-center">
+              {strip}
+            </a>
+          ) : (
+            <div className="flex h-full items-center">{strip}</div>
+          )}
+        </div>
+        <button type="button" onClick={close} aria-label={t.bannerClose} className="flex h-10 w-11 shrink-0 items-center justify-center bg-[#0e7490] text-white/90 hover:text-white">
+          <X className="h-4 w-4" aria-hidden="true" />
+        </button>
+      </aside>
+    </>
+  )
+}
+
 export function WhatsAppFloat() {
   const { t, content } = useSite()
   return (
@@ -137,7 +218,7 @@ export function WhatsAppFloat() {
       target="_blank"
       rel="noopener"
       aria-label={t.whatsappFloat}
-      className="fixed bottom-4 right-4 z-30 flex h-14 w-14 items-center justify-center rounded-full bg-[#25D366] text-white shadow-[0_10px_30px_rgba(0,0,0,0.25)] transition hover:scale-105 md:bottom-6 md:right-6"
+      className="fixed bottom-[calc(1rem+var(--banner-h,0px))] right-4 z-30 flex h-14 w-14 items-center justify-center rounded-full bg-[#25D366] text-white shadow-[0_10px_30px_rgba(0,0,0,0.25)] transition hover:scale-105 md:bottom-[calc(1.5rem+var(--banner-h,0px))] md:right-6"
     >
       <svg viewBox="0 0 24 24" className="h-7 w-7 fill-current" aria-hidden="true">
         <path d="M17.47 14.38c-.3-.15-1.76-.87-2.03-.97-.27-.1-.47-.15-.67.15-.2.3-.77.97-.94 1.17-.17.2-.35.22-.65.07-.3-.15-1.26-.46-2.4-1.48-.89-.79-1.49-1.77-1.66-2.07-.17-.3-.02-.46.13-.61.13-.13.3-.35.45-.52.15-.17.2-.3.3-.5.1-.2.05-.37-.03-.52-.07-.15-.67-1.61-.92-2.21-.24-.58-.49-.5-.67-.51h-.57c-.2 0-.52.07-.79.37-.27.3-1.04 1.02-1.04 2.48s1.07 2.88 1.21 3.08c.15.2 2.1 3.2 5.08 4.49.71.31 1.26.49 1.69.63.71.23 1.36.2 1.87.12.57-.09 1.76-.72 2.01-1.41.25-.69.25-1.29.17-1.41-.07-.12-.27-.2-.57-.35M12.05 21.5h-.01a9.4 9.4 0 0 1-4.8-1.31l-.34-.2-3.57.93.95-3.48-.22-.36a9.4 9.4 0 0 1-1.44-5.02c0-5.2 4.24-9.43 9.44-9.43a9.37 9.37 0 0 1 6.67 2.77 9.37 9.37 0 0 1 2.76 6.67c0 5.2-4.23 9.43-9.44 9.43m8.03-17.46A11.3 11.3 0 0 0 12.05.7C5.79.7.7 5.79.7 12.05c0 2 .52 3.95 1.52 5.67L.6 23.3l5.72-1.5a11.3 11.3 0 0 0 5.42 1.38h.01c6.26 0 11.35-5.09 11.35-11.35 0-3.03-1.18-5.88-3.32-8.02" />
@@ -219,6 +300,7 @@ export function Shell({ route, children }: { route: Route; children: ReactNode }
         {children}
       </main>
       <Footer route={route} />
+      <BottomBanner />
       <WhatsAppFloat />
     </div>
   )

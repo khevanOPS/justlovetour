@@ -76,4 +76,13 @@ export const SETTINGS: Record<string, Validator> = {
     const v = obj(value, 'Currency')
     return { default: 'EUR', usd_per_eur: rate(v.usd_per_eur, 'US dollar rate'), mur_per_eur: rate(v.mur_per_eur, 'Mauritian rupee rate') }
   },
+  banner: (value) => {
+    const v = obj(value, 'Banner')
+    const link = str(v.link, 300, 'Banner link')
+    if (link && !/^(https:\/\/[^\s]+|\/[^\s]*)$/.test(link)) throw new HttpError(400, 'Banner link must start with https:// or with / for a page of this site, e.g. /tours/la-route-du-the')
+    const t = (v.text && typeof v.text === 'object' ? v.text : {}) as Record<string, unknown>
+    const text = { en: str(t.en, 160, 'English text'), fr: str(t.fr, 160, 'French text'), ru: str(t.ru, 160, 'Russian text') }
+    if (v.enabled === true && !text.en) throw new HttpError(400, 'Write the English text before switching the banner on')
+    return { enabled: v.enabled === true, text, link }
+  },
 }
