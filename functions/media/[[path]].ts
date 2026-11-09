@@ -1,4 +1,9 @@
 import type { Env } from '../_shared/env'
+import seedMedia from '../../scripts/seed-media.json'
+
+// Seed photos also ship as static files, so a seed key that is not in R2 yet
+// (for example on a preview before the upload script has run) still shows.
+const SEED_FILES = new Map((seedMedia as { file: string; key: string }[]).map(({ file, key }) => [key, file.replace(/^public/, '')]))
 
 const TYPES: Record<string, string> = { jpg: 'image/jpeg', jpeg: 'image/jpeg', png: 'image/png', webp: 'image/webp' }
 
@@ -8,7 +13,17 @@ export const onRequestGet: PagesFunction<Env, 'path'> = async ({ request, env, p
   if (!key || key.includes('..') || !/^(seed|uploads)\//.test(key)) return new Response('Not found', { status: 404 })
 
   const object = await env.MEDIA.get(key, { onlyIf: request.headers, range: request.headers })
-  if (!object) return new Response('Not found', { status: 404 })
+  if (!object) {
+    const file = SEED_FILES.get(key)
+    if (!file) return new Response('Not found', { status: 404 })
+    const url = new URL(request.url)
+    url.pathname = file.split('/').map(encodeURIComponent).join('/')
+    const res = await env.ASSETS.fetch(new Request(url, { headers: request.headers }))
+    if (!res.ok) return res
+    const out = new Response(res.body, res)
+    out.headers.set('Cache-Control', 'public, max-age=86400')
+    return out
+  }
 
   const headers = new Headers()
   object.writeHttpMetadata(headers)
