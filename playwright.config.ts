@@ -7,12 +7,12 @@ export default defineConfig({
   fullyParallel: true,
   retries: 0,
   use: {
-    baseURL: 'http://127.0.0.1:8788',
+    baseURL: 'http://127.0.0.1:8799',
     trace: 'on-first-retry',
   },
   webServer: {
-    command: 'npm run build && npx wrangler pages dev dist --port 8788',
-    url: 'http://127.0.0.1:8788/api/content',
+    command: 'npm run build && npx wrangler pages dev dist --port 8799',
+    url: 'http://127.0.0.1:8799/api/content',
     reuseExistingServer: true,
     timeout: 180_000,
   },
