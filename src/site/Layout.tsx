@@ -5,6 +5,7 @@ import { BackgroundVideo, VIDEO_CREDIT_URL } from './ui'
 import { availableCurrencies, go, linkClick, socialLinks, useSite, whatsappUrl, type Currency } from './lib'
 import { LANG_LABEL, LANG_NAME, LANGS, type Lang } from './i18n'
 import { parseRoute, pathFor, type Page, type Route } from './routes'
+import { normalizeBanner } from './banner'
 
 const NAV: { page: Page; key: keyof ReturnType<typeof useSite>['t']['nav'] }[] = [
   { page: 'home', key: 'home' },
@@ -85,8 +86,19 @@ function Logo() {
 export function Header({ route }: { route: Route }) {
   const { t, content } = useSite()
   const [menuOpen, setMenuOpen] = useState(false)
+  // On the home page the header floats over the hero's light show, and turns solid once the page scrolls.
+  const overlay = route.page === 'home'
+  const [scrolled, setScrolled] = useState(false)
+  useEffect(() => {
+    if (!overlay) return
+    const onScroll = () => setScrolled(window.scrollY > 24)
+    onScroll()
+    window.addEventListener('scroll', onScroll, { passive: true })
+    return () => window.removeEventListener('scroll', onScroll)
+  }, [overlay])
+  const solid = !overlay || scrolled
   return (
-    <header className="sticky top-0 z-40 bg-[#134e4a] text-white">
+    <header className={`sticky top-0 z-40 text-white transition-[background-color,box-shadow,backdrop-filter] duration-300 ${solid ? 'bg-[#134e4a]/95 shadow-[0_8px_30px_rgba(0,0,0,0.18)] backdrop-blur-md' : 'bg-transparent'}`}>
       <div className="mx-auto flex h-16 max-w-6xl items-center justify-between gap-3 px-4">
         <Logo />
         <nav aria-label="Main" className="hidden items-center gap-1 lg:flex">
@@ -129,82 +141,84 @@ export function Header({ route }: { route: Route }) {
   )
 }
 
-const BANNER_CLOSED_KEY = 'jlt_banner_closed'
-
-// Scrolling strip along the bottom of every page, written by the admins under Settings.
-// Closing it hides it until the admins change the text.
+// Scrolling strip along the bottom of every page, written by the admins under Banner. It can't be closed.
 function BottomBanner() {
   const { lang, t, content } = useSite()
-  const banner = content.settings.banner
-  const text = banner?.enabled ? banner.text[lang] || banner.text.en : ''
-  const [closed, setClosed] = useState<string | null>(() => {
-    try {
-      return localStorage.getItem(BANNER_CLOSED_KEY)
-    } catch {
-      return null
-    }
-  })
-  const visible = Boolean(text) && closed !== banner?.text.en
+  const banner = normalizeBanner(content.settings.banner)
+  const messages = banner.enabled ? banner.messages.filter((m) => m.enabled && m.text.en) : []
+  const visible = messages.length > 0
 
   // Lifts the WhatsApp button and leaves room under the footer while the strip is showing.
   useEffect(() => {
-    document.documentElement.style.setProperty('--banner-h', visible ? '40px' : '0px')
+    document.documentElement.style.setProperty('--banner-h', visible ? '44px' : '0px')
   }, [visible])
 
-  if (!visible || !banner) return null
-  const close = () => {
-    try {
-      localStorage.setItem(BANNER_CLOSED_KEY, banner.text.en)
-    } catch {
-      // Private mode: it just comes back on the next visit.
-    }
-    setClosed(banner.text.en)
+  if (!visible) return null
+
+  // A page of this site opens in the visitor's language unless the link names one.
+  const resolve = (href: string) => {
+    if (!href.startsWith('/')) return { href, route: null }
+    const url = new URL(href, window.location.origin)
+    const parsed = parseRoute(url.pathname, url.search)
+    const route = /^\/(fr|ru)(\/|$)/.test(url.pathname) ? parsed : { ...parsed, lang }
+    return { href: pathFor(route), route }
   }
-  const parts = text.split('·').map((part) => part.trim()).filter(Boolean)
+  const item = (m: (typeof messages)[number], copy: number) => {
+    const label = <span className="px-5">{m.text[lang] || m.text.en}</span>
+    if (!m.link) return label
+    const { href, route } = resolve(m.link)
+    return (
+      <a
+        href={href}
+        tabIndex={copy > 0 ? -1 : undefined}
+        {...(route || href.startsWith('tel:') ? {} : { target: '_blank', rel: 'noopener' })}
+        onClick={route ? (event) => { event.preventDefault(); go(route) } : undefined}
+        className="underline decoration-white/40 underline-offset-4 hover:decoration-white"
+      >
+        {label}
+      </a>
+    )
+  }
   const run = (copy: number) => (
-    <span aria-hidden={copy > 0 || undefined} className="flex shrink-0 items-center">
-      {parts.map((part, i) => (
-        <span key={i} className="flex items-center whitespace-nowrap">
-          <span className="px-5">{part}</span>
+    <span key={copy} aria-hidden={copy > 0 || undefined} className="flex shrink-0 items-center">
+      {messages.map((m) => (
+        <span key={m.id} className="flex items-center whitespace-nowrap">
+          {item(m, copy)}
           <Heart className="h-3 w-3 fill-amber-300 text-amber-300" aria-hidden="true" />
         </span>
       ))}
     </span>
   )
-  // Two identical halves scroll by half their width, so the loop never shows a seam.
-  const strip = (
-    <span className="jlt-marquee flex w-max" style={{ ['--marquee-duration' as string]: `${Math.max(18, text.length * 0.28)}s` }}>
-      {run(0)}
-      {run(1)}
-      {run(2)}
-      {run(3)}
-    </span>
-  )
-  // A page of this site opens in the visitor's language unless the link names one.
-  const internal = banner.link.startsWith('/')
-  const target = internal ? (() => {
-    const url = new URL(banner.link, window.location.origin)
-    const route = parseRoute(url.pathname, url.search)
-    return /^\/(fr|ru)(\/|$)/.test(url.pathname) ? route : { ...route, lang }
-  })() : null
-  const link = target ? pathFor(target) : banner.link
+  const length = messages.reduce((sum, m) => sum + (m.text[lang] || m.text.en).length + 6, 0)
+  // Identical halves scroll by half their width, so the loop never shows a seam.
+  const copies = messages.length < 3 ? 4 : 2
+  const button = banner.button
+  const number = content.settings.contact?.whatsapp ?? ''
+  const buttonHref = button.action === 'whatsapp' ? whatsappUrl(content) : number ? `tel:${number.replace(/[^\d+]/g, '')}` : ''
+  const buttonLabel = button.label[lang] || button.label.en
   return (
     <>
-      <div aria-hidden="true" className="h-10" />
-      <aside aria-label={t.bannerLabel} className="fixed inset-x-0 bottom-0 z-40 flex h-10 items-center bg-gradient-to-r from-[#0f3d3a] via-[#134e4a] to-[#0e7490] pb-[env(safe-area-inset-bottom)] text-[13px] font-medium text-white shadow-[0_-6px_20px_rgba(0,0,0,0.18)]">
+      <div aria-hidden="true" className="h-11" />
+      <aside aria-label={t.bannerLabel} className="fixed inset-x-0 bottom-0 z-40 flex h-11 items-center bg-gradient-to-r from-[#0f3d3a] via-[#134e4a] to-[#0e7490] pb-[env(safe-area-inset-bottom)] text-[13px] font-medium text-white shadow-[0_-6px_20px_rgba(0,0,0,0.18)]">
         <div className="jlt-marquee-wrap relative h-full flex-1 overflow-hidden">
-          <span aria-hidden="true" className="jlt-sweep pointer-events-none absolute inset-y-0 left-0 z-10 w-1/4 bg-gradient-to-r from-transparent via-white/30 to-transparent" />
-          {link ? (
-            <a href={link} {...(target ? {} : { target: '_blank', rel: 'noopener' })} onClick={target ? (event) => { event.preventDefault(); go(target) } : undefined} className="flex h-full items-center">
-              {strip}
-            </a>
-          ) : (
-            <div className="flex h-full items-center">{strip}</div>
-          )}
+          <span aria-hidden="true" className="jlt-sweep pointer-events-none absolute inset-y-0 left-0 z-10 w-1/3 bg-gradient-to-r from-transparent via-white/35 to-transparent" />
+          <div className="flex h-full items-center">
+            <span className="jlt-marquee flex w-max" style={{ ['--marquee-duration' as string]: `${Math.max(18, length * 0.3 * (copies / 2))}s` }}>
+              {Array.from({ length: copies }, (_, i) => run(i))}
+            </span>
+          </div>
         </div>
-        <button type="button" onClick={close} aria-label={t.bannerClose} className="flex h-10 w-11 shrink-0 items-center justify-center bg-[#0e7490] text-white/90 hover:text-white">
-          <X className="h-4 w-4" aria-hidden="true" />
-        </button>
+        {button.enabled && buttonHref && buttonLabel && (
+          <a
+            href={buttonHref}
+            {...(button.action === 'whatsapp' ? { target: '_blank', rel: 'noopener' } : {})}
+            className="jlt-glow relative mx-2 flex h-8 shrink-0 items-center gap-1.5 overflow-hidden rounded-full bg-amber-300 px-3.5 text-[13px] font-bold text-[#0f3d3a] hover:bg-amber-200"
+          >
+            <Phone className="h-3.5 w-3.5" aria-hidden="true" />
+            {buttonLabel}
+            <span aria-hidden="true" className="jlt-sweep pointer-events-none absolute inset-y-0 left-0 w-1/2 bg-gradient-to-r from-transparent via-white/70 to-transparent" />
+          </a>
+        )}
       </aside>
     </>
   )

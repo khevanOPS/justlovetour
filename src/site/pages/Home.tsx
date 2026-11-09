@@ -51,10 +51,11 @@ function Hero() {
 
   return (
     <section aria-labelledby="hero-title">
-      <div className="bg-[#134e4a] px-4 pb-[76px] pt-4 text-white md:pb-24 md:pt-10">
-        <div className="mx-auto max-w-6xl space-y-4">
+      <div className="relative isolate -mt-16 overflow-hidden bg-[#0d3f3c] px-4 pb-[76px] pt-20 text-white md:pb-24 md:pt-[104px]">
+        <HeroBackdrop />
+        <div className="relative mx-auto max-w-6xl space-y-4">
           <Eyebrow light>{hero?.eyebrow || t.heroEyebrow}</Eyebrow>
-          <h1 id="hero-title" className="max-w-2xl font-serif text-[34px] font-bold leading-[1.12] md:text-6xl">
+          <h1 id="hero-title" className="jlt-shine-text max-w-2xl font-serif text-[34px] font-bold leading-[1.12] md:text-6xl">
             {hero?.title || t.heroTitle}
           </h1>
           {hero?.travellers && (
@@ -124,6 +125,38 @@ function Hero() {
         })}
       </div>
     </section>
+  )
+}
+
+// Lagoon light show behind the hero: drifting aurora glows, sun rays, ripple lines, glints and film grain.
+// Pure CSS and SVG, decorative only, and still for visitors who ask for reduced motion.
+const GLINTS = [
+  [8, 22, 0], [16, 64, 1.3], [24, 38, 2.6], [33, 80, 0.7], [41, 18, 3.4], [49, 56, 1.9], [57, 30, 4.1], [63, 72, 0.4],
+  [70, 44, 2.2], [77, 16, 3.8], [84, 60, 1.1], [91, 34, 2.9], [96, 78, 4.6], [12, 88, 3.1], [52, 90, 0.9], [74, 86, 2.4],
+]
+
+function HeroBackdrop() {
+  return (
+    <div aria-hidden="true" className="pointer-events-none absolute inset-0 -z-10 overflow-hidden">
+      <div className="absolute inset-0 bg-[linear-gradient(160deg,#0a302e_0%,#0f4744_38%,#115e59_70%,#0e6a73_100%)]" />
+      <div className="jlt-aurora jlt-aurora-1" />
+      <div className="jlt-aurora jlt-aurora-2" />
+      <div className="jlt-aurora jlt-aurora-3" />
+      <div className="jlt-rays" />
+      <svg className="jlt-ripples absolute inset-x-0 bottom-0 h-[70%] w-[200%]" viewBox="0 0 2400 400" preserveAspectRatio="none">
+        {[0, 1, 2, 3, 4, 5].map((i) => {
+          const y = 90 + i * 52
+          const a = 18 + i * 4
+          const d = `M0 ${y} ${Array.from({ length: 8 }, (_, k) => `Q ${150 + k * 300} ${k % 2 ? y + a : y - a} ${300 + k * 300} ${y}`).join(' ')}`
+          return <path key={i} d={d} fill="none" stroke="white" strokeOpacity={0.05 + i * 0.018} strokeWidth={1.2} vectorEffect="non-scaling-stroke" />
+        })}
+      </svg>
+      {GLINTS.map(([x, y, delay], i) => (
+        <span key={i} className="jlt-glint" style={{ left: `${x}%`, top: `${y}%`, animationDelay: `${delay}s` }} />
+      ))}
+      <div className="jlt-grain absolute inset-0" />
+      <div className="absolute inset-x-0 bottom-0 h-24 bg-gradient-to-t from-[#0a302e]/60 to-transparent" />
+    </div>
   )
 }
 

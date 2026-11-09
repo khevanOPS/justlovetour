@@ -9,7 +9,6 @@ type Settings = {
   contact: { whatsapp: string; phone_display: string; email: string; location: string }
   socials: { instagram: string; facebook: string; youtube: string; google_reviews: string }
   currency: { usd_per_eur: number | string | null; mur_per_eur: number | string | null }
-  banner: { enabled: boolean; text: { en: string; fr: string; ru: string }; link: string }
   // Written by the website itself once a day; read-only here.
   currency_auto?: { usd_per_eur: number | null; mur_per_eur: number | null; checked_at: number }
 }
@@ -20,7 +19,7 @@ export default function SettingsPage() {
 
   useEffect(() => {
     api<{ settings: Settings }>('/api/admin/settings')
-      .then(({ settings }) => setSettings({ ...settings, banner: settings.banner ?? { enabled: false, text: { en: '', fr: '', ru: '' }, link: '' } })).catch((e) => toast.error(errorText(e)))
+      .then(({ settings }) => setSettings(settings)).catch((e) => toast.error(errorText(e)))
   }, [])
   if (!settings) return <p className="text-gray-500">Loading settings…</p>
 
@@ -41,7 +40,7 @@ export default function SettingsPage() {
     <div className="flex justify-end"><Button disabled={busy === key} onClick={() => save(key)} className="h-11 min-w-28 bg-teal-600 hover:bg-teal-700">{busy === key ? 'Saving…' : 'Save'}</Button></div>
   )
 
-  const { contact, socials, currency, currency_auto: autoRates, banner } = settings
+  const { contact, socials, currency, currency_auto: autoRates } = settings
   const usd = Number(currency.usd_per_eur)
   const mur = Number(currency.mur_per_eur)
 
@@ -80,23 +79,6 @@ export default function SettingsPage() {
         {saveButton('currency')}
       </Section>
 
-      <Section title="Bottom banner" hint="A thin strip that scrolls along the bottom of every page. Keep it short; separate ideas with a dot (·).">
-        <label className="flex min-h-11 items-center gap-3 text-sm font-medium">
-          <input type="checkbox" className="h-5 w-5 accent-teal-600" checked={banner.enabled} onChange={(e) => set('banner', { enabled: e.target.checked })} />
-          Show the banner on the website
-        </label>
-        <div className="grid gap-4">
-          {(['en', 'fr', 'ru'] as const).map((lang) => (
-            <Field key={lang} label={{ en: 'English text', fr: 'French text (empty = English)', ru: 'Russian text (empty = English)' }[lang]} id={`banner-${lang}`}>
-              <Input id={`banner-${lang}`} className="h-11" maxLength={160} value={banner.text[lang]} onChange={(e) => set('banner', { text: { ...banner.text, [lang]: e.target.value } })} />
-            </Field>
-          ))}
-          <Field label="Link when tapped (optional)" id="banner-link" hint="A page of this site such as /tours/la-route-du-the, or a full https:// link.">
-            <Input id="banner-link" className="h-11" inputMode="url" value={banner.link} onChange={(e) => set('banner', { link: e.target.value })} />
-          </Field>
-        </div>
-        {saveButton('banner')}
-      </Section>
     </div>
   )
 }

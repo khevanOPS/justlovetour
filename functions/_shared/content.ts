@@ -1,4 +1,5 @@
 import { HttpError } from './http'
+import { BANNER_LINK, BANNER_MAX_MESSAGES, BANNER_TEXT_MAX, BANNER_LABEL_MAX, normalizeBanner } from '../../src/site/banner'
 
 // Shapes of the editable page texts. Each validator returns a clean copy or throws.
 type Validator = (value: unknown) => unknown
@@ -77,12 +78,19 @@ export const SETTINGS: Record<string, Validator> = {
     return { default: 'EUR', usd_per_eur: rate(v.usd_per_eur, 'US dollar rate'), mur_per_eur: rate(v.mur_per_eur, 'Mauritian rupee rate') }
   },
   banner: (value) => {
-    const v = obj(value, 'Banner')
-    const link = str(v.link, 300, 'Banner link')
-    if (link && !/^(https:\/\/[^\s]+|\/[^\s]*)$/.test(link)) throw new HttpError(400, 'Banner link must start with https:// or with / for a page of this site, e.g. /tours/la-route-du-the')
-    const t = (v.text && typeof v.text === 'object' ? v.text : {}) as Record<string, unknown>
-    const text = { en: str(t.en, 160, 'English text'), fr: str(t.fr, 160, 'French text'), ru: str(t.ru, 160, 'Russian text') }
-    if (v.enabled === true && !text.en) throw new HttpError(400, 'Write the English text before switching the banner on')
-    return { enabled: v.enabled === true, text, link }
+    const raw = obj(value, 'Banner')
+    if (Array.isArray(raw.messages) && raw.messages.length > BANNER_MAX_MESSAGES) throw new HttpError(400, `The banner can hold up to ${BANNER_MAX_MESSAGES} messages`)
+    const b = normalizeBanner(value)
+    const messages = b.messages.map((m, i) => {
+      const n = `Message ${i + 1}`
+      const link = str(m.link, 300, `${n} link`)
+      if (link && !BANNER_LINK.test(link)) throw new HttpError(400, `${n} link must be a page of this site such as /tours/la-route-du-the, a full https:// link, or tel: with the phone number`)
+      const text = { en: str(m.text.en, BANNER_TEXT_MAX, `${n} English text`), fr: str(m.text.fr, BANNER_TEXT_MAX, `${n} French text`), ru: str(m.text.ru, BANNER_TEXT_MAX, `${n} Russian text`) }
+      if (m.enabled && !text.en) throw new HttpError(400, `${n} needs its English text, or switch it off`)
+      return { id: str(m.id, 20, `${n} id`).replace(/[^a-z0-9]/gi, '') || `m${i + 1}`, enabled: m.enabled, text, link }
+    })
+    const label = { en: str(b.button.label.en, BANNER_LABEL_MAX, 'Button English text'), fr: str(b.button.label.fr, BANNER_LABEL_MAX, 'Button French text'), ru: str(b.button.label.ru, BANNER_LABEL_MAX, 'Button Russian text') }
+    if (b.enabled && !messages.some((m) => m.enabled && m.text.en)) throw new HttpError(400, 'Add at least one message before switching the banner on')
+    return { enabled: b.enabled, messages, button: { enabled: b.button.enabled, action: b.button.action, label } }
   },
 }

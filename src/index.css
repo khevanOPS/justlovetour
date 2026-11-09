@@ -64,13 +64,101 @@
   from { transform: translateX(0); }
   to { transform: translateX(-50%); }
 }
+/* One pass of light, then a pause: the shine comes back every 3 seconds. */
 @keyframes jlt-sweep {
   0% { transform: translateX(-120%) skewX(-20deg); }
-  45%, 100% { transform: translateX(420%) skewX(-20deg); }
+  40%, 100% { transform: translateX(320%) skewX(-20deg); }
+}
+@keyframes jlt-glow {
+  0%, 100% { box-shadow: 0 0 0 0 rgba(252, 211, 77, 0); }
+  20% { box-shadow: 0 0 14px 3px rgba(252, 211, 77, 0.75); }
+  45% { box-shadow: 0 0 0 0 rgba(252, 211, 77, 0); }
 }
 .jlt-marquee { animation: jlt-marquee var(--marquee-duration, 30s) linear infinite; }
 .jlt-marquee-wrap:hover .jlt-marquee { animation-play-state: paused; }
-.jlt-sweep { animation: jlt-sweep 4.5s ease-in-out infinite; }
+.jlt-sweep { animation: jlt-sweep 3s ease-in-out infinite; }
+.jlt-glow { animation: jlt-glow 3s ease-in-out infinite; }
+/* Hero light show (HeroBackdrop in pages/Home.tsx). Only transforms and opacity move, so phones stay smooth. */
+.jlt-aurora {
+  position: absolute;
+  border-radius: 9999px;
+  mix-blend-mode: screen;
+  will-change: transform;
+}
+.jlt-aurora-1 {
+  width: 70vmax; height: 70vmax; left: -25vmax; top: -35vmax;
+  background: radial-gradient(circle, rgba(45, 212, 191, 0.55) 0%, rgba(45, 212, 191, 0.12) 38%, transparent 66%);
+  animation: jlt-drift-1 22s ease-in-out infinite alternate;
+}
+.jlt-aurora-2 {
+  width: 60vmax; height: 60vmax; right: -22vmax; top: -18vmax;
+  background: radial-gradient(circle, rgba(34, 211, 238, 0.42) 0%, rgba(34, 211, 238, 0.1) 40%, transparent 66%);
+  animation: jlt-drift-2 26s ease-in-out infinite alternate;
+}
+.jlt-aurora-3 {
+  width: 44vmax; height: 44vmax; left: 38%; top: 10%;
+  background: radial-gradient(circle, rgba(251, 191, 36, 0.26) 0%, rgba(251, 146, 60, 0.07) 42%, transparent 66%);
+  animation: jlt-drift-3 30s ease-in-out infinite alternate;
+}
+@keyframes jlt-drift-1 { to { transform: translate3d(18vw, 10vh, 0) scale(1.15); } }
+@keyframes jlt-drift-2 { to { transform: translate3d(-16vw, 14vh, 0) scale(0.9); } }
+@keyframes jlt-drift-3 { to { transform: translate3d(-22vw, -8vh, 0) scale(1.2); } }
+
+/* Soft sun rays fanning from the top right corner. */
+.jlt-rays {
+  position: absolute;
+  width: 160vmax; height: 160vmax; right: -80vmax; top: -80vmax;
+  background: repeating-conic-gradient(from 200deg at 50% 50%, rgba(255, 255, 255, 0.07) 0deg 3deg, transparent 3deg 14deg);
+  -webkit-mask-image: radial-gradient(circle, black 0%, transparent 55%);
+  mask-image: radial-gradient(circle, black 0%, transparent 55%);
+  animation: jlt-rays 60s linear infinite;
+  will-change: transform;
+}
+@keyframes jlt-rays { to { transform: rotate(360deg); } }
+
+/* Lagoon ripple lines drifting sideways; the SVG is twice as wide, so the loop is seamless. */
+.jlt-ripples { animation: jlt-ripples 28s linear infinite; will-change: transform; }
+@keyframes jlt-ripples { to { transform: translateX(-50%); } }
+
+/* Sun glints twinkling on the water. */
+.jlt-glint {
+  position: absolute;
+  width: 4px; height: 4px;
+  border-radius: 9999px;
+  background: #fff;
+  box-shadow: 0 0 8px 3px rgba(255, 255, 255, 0.7), 0 0 14px 4px rgba(94, 234, 212, 0.35);
+  opacity: 0;
+  animation: jlt-glint 5s ease-in-out infinite;
+}
+@keyframes jlt-glint {
+  0%, 100% { opacity: 0; transform: scale(0.4); }
+  12% { opacity: 1; transform: scale(1); }
+  28% { opacity: 0; transform: scale(0.6); }
+}
+
+/* Fine film grain, the detail that makes flat colour feel printed. */
+.jlt-grain {
+  opacity: 0.09;
+  mix-blend-mode: overlay;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+}
+
+/* A band of warm light passes across the headline every 7 seconds. */
+.jlt-shine-text {
+  background: linear-gradient(110deg, #fff 0%, #fff 42%, #fde68a 48%, #fff7d6 50%, #fde68a 52%, #fff 58%, #fff 100%);
+  background-size: 300% 100%;
+  background-position: 100% 0;
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  animation: jlt-shine-text 7s ease-in-out infinite;
+}
+@keyframes jlt-shine-text {
+  0%, 55% { background-position: 100% 0; }
+  85%, 100% { background-position: 0% 0; }
+}
+
 @media (prefers-reduced-motion: reduce) {
-  .jlt-marquee, .jlt-sweep { animation: none; }
+  .jlt-marquee, .jlt-sweep, .jlt-glow, .jlt-aurora, .jlt-rays, .jlt-ripples, .jlt-glint, .jlt-shine-text { animation: none; }
+  .jlt-glint { opacity: 0.6; }
 }
