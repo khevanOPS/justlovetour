@@ -79,6 +79,43 @@ export default function SettingsPage() {
         {saveButton('currency')}
       </Section>
 
+      <PasswordSection />
+
     </div>
+  )
+}
+
+function PasswordSection() {
+  const [current, setCurrent] = useState('')
+  const [next, setNext] = useState('')
+  const [repeat, setRepeat] = useState('')
+  const [busy, setBusy] = useState(false)
+  const change = async (event: React.FormEvent) => {
+    event.preventDefault()
+    if (next !== repeat) return toast.error('The two new passwords are not the same')
+    setBusy(true)
+    try {
+      await api('/api/admin/password', { method: 'POST', json: { current, next } })
+      setCurrent('')
+      setNext('')
+      setRepeat('')
+      toast.success('Password changed. Other devices have been signed out.')
+    } catch (error) {
+      toast.error(errorText(error))
+    } finally {
+      setBusy(false)
+    }
+  }
+  return (
+    <Section title="My password" hint="Choose a password only you know, at least 10 characters.">
+      <form onSubmit={change} className="space-y-4">
+        <div className="grid gap-4 sm:grid-cols-3">
+          <Field label="Current password" id="pw-current"><Input id="pw-current" type="password" autoComplete="current-password" className="h-11" value={current} onChange={(e) => setCurrent(e.target.value)} /></Field>
+          <Field label="New password" id="pw-next"><Input id="pw-next" type="password" autoComplete="new-password" minLength={10} className="h-11" value={next} onChange={(e) => setNext(e.target.value)} /></Field>
+          <Field label="New password again" id="pw-repeat"><Input id="pw-repeat" type="password" autoComplete="new-password" minLength={10} className="h-11" value={repeat} onChange={(e) => setRepeat(e.target.value)} /></Field>
+        </div>
+        <div className="flex justify-end"><Button type="submit" disabled={busy || !current || next.length < 10} className="h-11 min-w-28 bg-teal-600 hover:bg-teal-700">{busy ? 'Saving…' : 'Change password'}</Button></div>
+      </form>
+    </Section>
   )
 }
