@@ -1,0 +1,2 @@
+-- The scrolling banner at the bottom of every page. Admins edit it under Settings.
+INSERT OR IGNORE INTO settings (key, value, updated_at) VALUES ('banner', '{"enabled":true,"text":{"en":"Private tours across Mauritius with a local guide · Book in minutes on WhatsApp · Prices in EUR, USD or MUR","fr":"Excursions privées à l’île Maurice avec un guide local · Réservez en quelques minutes sur WhatsApp · Prix en EUR, USD ou MUR","ru":"Частные экскурсии по Маврикию с местным гидом · Бронирование за пару минут в WhatsApp · Цены в EUR, USD или MUR"},"link":""}', 1793577600000);

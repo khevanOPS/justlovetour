@@ -2,10 +2,54 @@
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Just Love Tour</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+    <title>Just Love Tour · Private tours in Mauritius with a local guide</title>
+    <meta name="description" content="Private tours across Mauritius with a local driver-guide. Hotel pickup, lunch included. Book on WhatsApp." />
+    <meta name="theme-color" content="#134e4a" />
+    <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+    <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600;700&family=Inter:wght@400;500;600;700&display=swap" />
+    <style>
+      /* Logo splash, first visit only. Hidden unless the script below turns it on, so search engines never see it. */
+      #splash { display: none; }
+      html.jlt-splash #splash { position: fixed; inset: 0; z-index: 100; display: flex; align-items: center; justify-content: center; overflow: hidden; background: radial-gradient(ellipse at 55% 40%, #0a3f4a 0%, #04222c 55%, #010c13 100%); transition: opacity 0.5s ease; cursor: pointer; }
+      html.jlt-splash-out #splash { opacity: 0; pointer-events: none; }
+      #splash .logo { position: relative; width: min(92vw, 820px); height: auto; opacity: 0; transform: scale(0.94); animation: jlt-splash-in 0.8s ease-out 0.1s forwards; -webkit-mask-image: radial-gradient(ellipse closest-side at 50% 50%, #000 55%, transparent 100%); mask-image: radial-gradient(ellipse closest-side at 50% 50%, #000 55%, transparent 100%); }
+      @media (orientation: portrait) { #splash .logo { width: min(150vw, 820px); max-width: none; } }
+      #splash .sweep { position: absolute; inset: 0; background: linear-gradient(100deg, transparent 35%, rgba(255, 255, 255, 0.35) 50%, transparent 65%); transform: translateX(-100%); animation: jlt-splash-sweep 1.2s ease-in-out 0.6s forwards; mix-blend-mode: screen; }
+      @keyframes jlt-splash-in { to { opacity: 1; transform: scale(1); } }
+      @keyframes jlt-splash-sweep { to { transform: translateX(100%); } }
+    </style>
+    <script>
+      ;(function () {
+        try {
+          var html = document.documentElement
+          if (localStorage.getItem('jlt_splash') || navigator.webdriver || /bot|crawl|spider|lighthouse/i.test(navigator.userAgent) || matchMedia('(prefers-reduced-motion: reduce)').matches) return
+          localStorage.setItem('jlt_splash', '1')
+          html.classList.add('jlt-splash')
+          var done = false
+          window.jltSplashEnd = function () {
+            if (done) return
+            done = true
+            html.classList.add('jlt-splash-out')
+            setTimeout(function () { html.classList.remove('jlt-splash', 'jlt-splash-out') }, 550)
+          }
+          setTimeout(window.jltSplashEnd, 2600)
+        } catch (e) {}
+      })()
+    </script>
   </head>
   <body>
+    <div id="splash" aria-hidden="true" onclick="window.jltSplashEnd && jltSplashEnd()">
+      <img class="logo" data-src="/splash/logo.webp" alt="" width="1200" height="800" onload="setTimeout(function () { window.jltSplashEnd && jltSplashEnd() }, 1500)" />
+      <div class="sweep"></div>
+    </div>
+    <script>
+      // Only first-time visitors download the splash pictures.
+      if (document.documentElement.classList.contains('jlt-splash')) document.querySelectorAll('#splash img').forEach(function (img) { img.src = img.getAttribute('data-src') })
+    </script>
     <div id="root"></div>
     <script type="module" src="/src/main.tsx"></script>
   </body>
