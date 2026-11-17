@@ -1,6 +1,7 @@
 import { useEffect, useRef, useState } from 'react'
 import { BadgeEuro, Car, ChevronLeft, ChevronRight, Compass, MapPin, Plane, Sparkles, Star, Utensils } from 'lucide-react'
-import { fetchGallery, useReviews, type Category, type GalleryPage, type Tour } from '../data'
+import { normalizeReviews, reviewMonth, REVIEW_SOURCE_LABEL } from '../reviews'
+import { fetchGallery, type Category, type GalleryPage, type Tour } from '../data'
 import { linkClick, useSite, whatsappUrl } from '../lib'
 import { pathFor, type Route } from '../routes'
 import { BackgroundVideo, Chip, Eyebrow, Price, SectionTitle, TourImage, TourRow } from '../ui'
@@ -296,8 +297,8 @@ function Why() {
 }
 
 export function Reviews({ compact = false }: { compact?: boolean }) {
-  const { t, content } = useSite()
-  const reviews = useReviews()
+  const { lang, t, content } = useSite()
+  const reviews = normalizeReviews(content.settings.reviews).filter((r) => r.enabled && r.name && r.text).slice(0, 10)
   const googleUrl = content.settings.socials?.google_reviews
   if (!reviews.length && !googleUrl) return null
   return (
@@ -309,18 +310,29 @@ export function Reviews({ compact = false }: { compact?: boolean }) {
         </div>
       </div>
       {reviews.length > 0 && (
-        <ul className="no-scrollbar flex snap-x snap-mandatory gap-3 overflow-x-auto scroll-px-4 px-4 pb-2 md:grid md:grid-cols-3 md:overflow-visible md:px-0">
-          {reviews.slice(0, 6).map((review) => (
-            <li key={review.id} className="flex w-[80vw] max-w-[300px] shrink-0 snap-start flex-col gap-2 rounded-[18px] bg-white p-4 md:w-auto md:max-w-none">
-              <span className="text-[15px] text-amber-500" aria-label={`${review.rating} / 5`}>
-                {'★★★★★'.slice(0, Math.round(review.rating))}
-              </span>
-              <p className="line-clamp-6 text-sm leading-relaxed text-slate-700">{review.text}</p>
-              <p className="mt-auto text-[13px] font-semibold">
-                {review.name} <span className="font-normal text-slate-500">· Google{review.date ? ` · ${review.date}` : ''}</span>
-              </p>
-            </li>
-          ))}
+        <ul className="no-scrollbar flex snap-x snap-mandatory gap-3 overflow-x-auto scroll-px-4 px-4 pb-2 md:gap-4 md:px-0">
+          {reviews.map((review) => {
+            const source = REVIEW_SOURCE_LABEL[review.source]
+            const when = reviewMonth(review.date, lang)
+            return (
+              <li key={review.id} className="flex w-[80vw] max-w-[320px] shrink-0 snap-start flex-col gap-3 rounded-[18px] bg-white p-5 shadow-[0_8px_24px_rgba(15,23,42,0.06)] md:w-[calc((100%-2rem)/3)] md:max-w-none">
+                <span className="text-[15px] tracking-wide text-amber-500" aria-label={`${review.rating} / 5`}>
+                  {'★★★★★'.slice(0, review.rating)}
+                  <span className="text-slate-200">{'★★★★★'.slice(review.rating)}</span>
+                </span>
+                <p className="line-clamp-6 text-sm leading-relaxed text-slate-700">{review.text}</p>
+                <div className="mt-auto flex items-center gap-3 pt-1">
+                  <span aria-hidden="true" className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-teal-700 text-sm font-semibold text-white">
+                    {review.name.trim().slice(0, 1).toUpperCase()}
+                  </span>
+                  <p className="text-[13px] font-semibold leading-tight">
+                    {review.name}
+                    {(source || when) && <span className="block font-normal text-slate-500">{[source, when].filter(Boolean).join(' · ')}</span>}
+                  </p>
+                </div>
+              </li>
+            )
+          })}
         </ul>
       )}
       {googleUrl && (

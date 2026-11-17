@@ -53,13 +53,14 @@ export default function Transfers() {
     <div className="space-y-6 pb-24">
       <div>
         <h1 className="text-3xl font-bold">Transfers</h1>
-        <p className="mt-1 text-gray-600">Popular destinations on the Transfers page. Visitors tap one to set it as their drop-off.</p>
+        <p className="mt-1 text-gray-600">Popular destinations on the Transfers page. Visitors tap one to set it as their drop-off. Tap a photo to upload a new one or pick one you already have.</p>
       </div>
       <ul className="space-y-3">
         {list.map((d, i) => (
           <li key={d.id ?? `new-${i}`} className={`flex flex-wrap gap-3 rounded-2xl bg-white p-3 shadow-sm sm:flex-nowrap ${d.status === 'hidden' ? 'opacity-60' : ''}`}>
-            <button type="button" onClick={() => setPicking(i)} aria-label={`Choose a photo for ${d.name_en || 'this destination'}`} className="relative h-24 w-24 shrink-0 overflow-hidden rounded-xl bg-gray-100">
+            <button type="button" onClick={() => setPicking(i)} aria-label={`Change the photo for ${d.name_en || 'this destination'}`} className="group relative h-24 w-24 shrink-0 overflow-hidden rounded-xl bg-gray-100">
               {d.image ? <img src={d.image} alt="" className="h-full w-full object-cover" /> : <span className="flex h-full flex-col items-center justify-center gap-1 text-xs text-gray-500"><ImagePlus className="h-5 w-5" aria-hidden="true" />Add photo</span>}
+              {d.image && <span className="absolute inset-x-0 bottom-0 bg-black/55 py-1 text-center text-[11px] font-medium text-white">Change</span>}
             </button>
             <div className="grid min-w-0 flex-1 gap-2 sm:grid-cols-3">
               <Input aria-label="Name in English" className="h-11" value={d.name_en} placeholder="Name (English)" onChange={(e) => set(i, { name_en: e.target.value })} />

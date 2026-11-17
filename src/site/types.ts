@@ -46,6 +46,7 @@ export interface Content {
     socials?: { instagram: string; facebook: string; youtube: string; google_reviews: string } | null
     currency?: { default: 'EUR'; usd_per_eur: number | null; mur_per_eur: number | null } | null
     banner?: unknown
+    reviews?: unknown
   }
   destinations: { slug: string; name: string; image: string | null }[]
 }
