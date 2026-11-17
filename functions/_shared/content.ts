@@ -1,4 +1,5 @@
 import { HttpError } from './http'
+import { normalizeReviews, REVIEW_DATE, REVIEW_MAX, REVIEW_NAME_MAX, REVIEW_TEXT_MAX } from '../../src/site/reviews'
 import { BANNER_LINK, BANNER_MAX_MESSAGES, BANNER_TEXT_MAX, BANNER_LABEL_MAX, normalizeBanner } from '../../src/site/banner'
 
 // Shapes of the editable page texts. Each validator returns a clean copy or throws.
@@ -92,5 +93,18 @@ export const SETTINGS: Record<string, Validator> = {
     const label = { en: str(b.button.label.en, BANNER_LABEL_MAX, 'Button English text'), fr: str(b.button.label.fr, BANNER_LABEL_MAX, 'Button French text'), ru: str(b.button.label.ru, BANNER_LABEL_MAX, 'Button Russian text') }
     if (b.enabled && !messages.some((m) => m.enabled && m.text.en)) throw new HttpError(400, 'Add at least one message before switching the banner on')
     return { enabled: b.enabled, messages, button: { enabled: b.button.enabled, action: b.button.action, label } }
+  },
+  reviews: (value) => {
+    const list = arr(value, REVIEW_MAX, 'Reviews')
+    return normalizeReviews(list).map((r, i) => {
+      const n = `Review ${i + 1}`
+      const raw = (list[i] && typeof list[i] === 'object' ? list[i] : {}) as Record<string, unknown>
+      const name = str(r.name, REVIEW_NAME_MAX, `${n} name`)
+      const text = str(r.text, REVIEW_TEXT_MAX, `${n} text`)
+      const date = str(raw.date, 7, `${n} date`)
+      if (date && !REVIEW_DATE.test(date)) throw new HttpError(400, `${n} date must be a month, e.g. 2026-03`)
+      if (r.enabled && (!name || !text)) throw new HttpError(400, `${n} needs a name and the review text, or switch it off`)
+      return { id: str(r.id, 20, `${n} id`).replace(/[^a-z0-9]/gi, '') || `r${i + 1}`, enabled: r.enabled, name, rating: r.rating, text, date, source: r.source }
+    })
   },
 }

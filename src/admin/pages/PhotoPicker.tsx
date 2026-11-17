@@ -1,13 +1,15 @@
 import { useEffect, useState } from 'react'
-import { Check } from 'lucide-react'
+import { Check, Upload } from 'lucide-react'
 import { toast } from 'sonner'
 import { Button } from '@/components/ui/button'
 import { api, errorText, type MediaItem } from '../api'
+import { uploadPhoto } from '../upload'
 
 // Full-screen chooser over every uploaded photo; returns the ones ticked.
 export default function PhotoPicker({ selected, onPick, onClose, single = false }: { selected: string[]; onPick: (photos: MediaItem[]) => void; onClose: () => void; single?: boolean }) {
   const [media, setMedia] = useState<MediaItem[] | null>(null)
   const [chosen, setChosen] = useState<string[]>([])
+  const [uploading, setUploading] = useState(false)
 
   useEffect(() => {
     api<{ media: MediaItem[] }>('/api/admin/media')
@@ -15,13 +17,38 @@ export default function PhotoPicker({ selected, onPick, onClose, single = false 
       .catch((error) => toast.error(errorText(error)))
   }, [])
 
+  // New photos go into the library and come back ticked; with a single pick they are used straight away.
+  const upload = async (files: FileList | null) => {
+    if (!files?.length) return
+    setUploading(true)
+    try {
+      const added: MediaItem[] = []
+      for (const file of Array.from(single ? [files[0]] : files)) added.push(await uploadPhoto(file))
+      if (single) return onPick(added)
+      setMedia((current) => [...added, ...(current ?? [])])
+      setChosen((current) => [...current, ...added.map((m) => m.id)])
+      toast.success(added.length > 1 ? `${added.length} photos uploaded` : 'Photo uploaded')
+    } catch (error) {
+      toast.error(errorText(error))
+    } finally {
+      setUploading(false)
+    }
+  }
+
   const toggle = (id: string) => setChosen((current) => (single ? [id] : current.includes(id) ? current.filter((c) => c !== id) : [...current, id]))
 
   return (
     <div role="dialog" aria-modal="true" aria-label="Choose photos" className="fixed inset-0 z-50 flex flex-col bg-white">
       <div className="flex items-center justify-between border-b border-gray-200 px-4 py-3">
         <h2 className="font-sans text-lg font-semibold">Choose {single ? 'a photo' : 'photos'}</h2>
-        <Button variant="ghost" className="h-11" onClick={onClose}>Cancel</Button>
+        <div className="flex items-center gap-2">
+          <label className={`flex h-11 cursor-pointer items-center gap-2 whitespace-nowrap rounded-lg bg-teal-600 px-4 text-sm font-semibold text-white hover:bg-teal-700 ${uploading ? 'pointer-events-none opacity-60' : ''}`}>
+            <Upload className="h-4 w-4" aria-hidden="true" />
+            {uploading ? 'Uploading…' : <><span className="sm:hidden">Upload</span><span className="hidden sm:inline">{single ? 'Upload a new photo' : 'Upload new photos'}</span></>}
+            <input type="file" accept="image/*" multiple={!single} className="sr-only" onChange={(e) => { upload(e.target.files); e.target.value = '' }} />
+          </label>
+          <Button variant="ghost" className="h-11" onClick={onClose}>Cancel</Button>
+        </div>
       </div>
       <div className="flex-1 overflow-y-auto p-4">
         {!media ? (

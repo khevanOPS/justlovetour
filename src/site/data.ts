@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react'
 import type { Lang } from './i18n'
-import type { Content, GalleryPage, Review } from './types'
+import type { Content, GalleryPage } from './types'
 
 export type { Category, Content, GalleryPage, Image, Review, Tour } from './types'
 
@@ -38,23 +38,6 @@ export function useContent(lang: Lang): Content | null {
   }, [lang])
 
   return content
-}
-
-let reviewsPromise: Promise<Review[]> | null = null
-export function useReviews(): Review[] {
-  const [reviews, setReviews] = useState<Review[]>([])
-  useEffect(() => {
-    reviewsPromise ??= fetch('/api/reviews')
-      .then((r) => (r.ok ? (r.json() as Promise<Review[]>) : []))
-      .then((list) => (Array.isArray(list) ? list.filter((review) => review.rating >= 5 && review.text) : []))
-      .catch(() => [])
-    let alive = true
-    reviewsPromise.then((list) => alive && setReviews(list))
-    return () => {
-      alive = false
-    }
-  }, [])
-  return reviews
 }
 
 export async function fetchGallery(lang: Lang, page: number, perPage: number): Promise<GalleryPage> {

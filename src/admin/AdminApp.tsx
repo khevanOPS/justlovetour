@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useState, type FormEvent } from 'react'
-import { Clock, FileText, Heart, Image, LogOut, MapPin, Megaphone, Settings as SettingsIcon, Ticket } from 'lucide-react'
+import { Clock, FileText, Heart, Image, LogOut, MapPin, Megaphone, Settings as SettingsIcon, Star, Ticket } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
@@ -8,6 +8,7 @@ import History from './pages/History'
 import PageTexts from './pages/PageTexts'
 import Photos from './pages/Photos'
 import BannerPage from './pages/BannerPage'
+import ReviewsPage from './pages/ReviewsPage'
 import Settings from './pages/Settings'
 import TourEditor from './pages/TourEditor'
 import Tours from './pages/Tours'
@@ -25,6 +26,7 @@ const NAV = [
   { path: 'texts', label: 'Page texts', icon: FileText },
   { path: 'transfers', label: 'Transfers', icon: MapPin },
   { path: 'banner', label: 'Banner', icon: Megaphone },
+  { path: 'reviews', label: 'Reviews', icon: Star },
   { path: 'settings', label: 'Settings', icon: SettingsIcon },
   { path: 'history', label: 'History', icon: Clock },
 ] as const
@@ -70,6 +72,7 @@ export default function AdminApp() {
   else if (section === 'texts') page = <PageTexts />
   else if (section === 'transfers') page = <Transfers />
   else if (section === 'banner') page = <BannerPage />
+  else if (section === 'reviews') page = <ReviewsPage />
   else if (section === 'settings') page = <Settings />
   else if (section === 'history') page = <History />
   else page = <Tours />
