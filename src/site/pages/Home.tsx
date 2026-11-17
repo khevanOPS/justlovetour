@@ -129,34 +129,45 @@ function Hero() {
   )
 }
 
-// Lagoon light show behind the hero: drifting aurora glows, sun rays, ripple lines, glints and film grain.
-// Pure CSS and SVG, decorative only, and still for visitors who ask for reduced motion.
+// Aerial lagoon video behind the hero: a square crop for phones, a wide strip for larger screens.
+// The poster paints at once; the video loops seamlessly (the last second fades into the first). Still for reduced motion.
 const GLINTS = [
-  [8, 22, 0], [16, 64, 1.3], [24, 38, 2.6], [33, 80, 0.7], [41, 18, 3.4], [49, 56, 1.9], [57, 30, 4.1], [63, 72, 0.4],
-  [70, 44, 2.2], [77, 16, 3.8], [84, 60, 1.1], [91, 34, 2.9], [96, 78, 4.6], [12, 88, 3.1], [52, 90, 0.9], [74, 86, 2.4],
+  [8, 22, 0], [24, 38, 2.6], [41, 18, 3.4], [57, 30, 4.1], [70, 44, 2.2], [84, 60, 1.1], [91, 34, 2.9], [52, 90, 0.9],
 ]
 
 function HeroBackdrop() {
+  const ref = useRef<HTMLVideoElement>(null)
+  useEffect(() => {
+    const video = ref.current
+    if (!video) return
+    // React does not write the muted attribute, and Safari refuses to autoplay without it.
+    video.defaultMuted = true
+    video.muted = true
+    video.setAttribute('muted', '')
+    if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return
+    video.play().catch(() => {})
+    // Stop decoding while the hero is off screen, to save battery on phones.
+    const observer = new IntersectionObserver(([entry]) => (entry.isIntersecting ? video.play().catch(() => {}) : video.pause()))
+    observer.observe(video)
+    return () => observer.disconnect()
+  }, [])
   return (
-    <div aria-hidden="true" className="pointer-events-none absolute inset-0 -z-10 overflow-hidden">
-      <div className="absolute inset-0 bg-[linear-gradient(160deg,#0a302e_0%,#0f4744_38%,#115e59_70%,#0e6a73_100%)]" />
-      <div className="jlt-aurora jlt-aurora-1" />
-      <div className="jlt-aurora jlt-aurora-2" />
-      <div className="jlt-aurora jlt-aurora-3" />
-      <div className="jlt-rays" />
-      <svg className="jlt-ripples absolute inset-x-0 bottom-0 h-[70%] w-[200%]" viewBox="0 0 2400 400" preserveAspectRatio="none">
-        {[0, 1, 2, 3, 4, 5].map((i) => {
-          const y = 90 + i * 52
-          const a = 18 + i * 4
-          const d = `M0 ${y} ${Array.from({ length: 8 }, (_, k) => `Q ${150 + k * 300} ${k % 2 ? y + a : y - a} ${300 + k * 300} ${y}`).join(' ')}`
-          return <path key={i} d={d} fill="none" stroke="white" strokeOpacity={0.05 + i * 0.018} strokeWidth={1.2} vectorEffect="non-scaling-stroke" />
-        })}
-      </svg>
+    <div aria-hidden="true" className="pointer-events-none absolute inset-0 -z-10 overflow-hidden bg-[#0f4744]">
+      <picture>
+        <source media="(min-width: 768px)" srcSet="/videos/hero-poster-1600.webp" />
+        <img src="/videos/hero-poster-720.webp" alt="" fetchPriority="high" className="absolute inset-0 h-full w-full object-cover" />
+      </picture>
+      <video ref={ref} muted loop playsInline preload="auto" tabIndex={-1} className="absolute inset-0 h-full w-full object-cover">
+        <source src="/videos/hero-1600.mp4" type="video/mp4" media="(min-width: 768px)" />
+        <source src="/videos/hero-720.mp4" type="video/mp4" />
+      </video>
+      {/* Teal tint so the white headline stays easy to read over bright water. */}
+      <div className="absolute inset-0 bg-[linear-gradient(180deg,rgba(8,40,38,0.62)_0%,rgba(10,48,46,0.38)_45%,rgba(10,48,46,0.55)_100%)]" />
+      <div className="absolute inset-0 bg-[linear-gradient(90deg,rgba(8,40,38,0.45)_0%,rgba(8,40,38,0.15)_55%,transparent_100%)]" />
       {GLINTS.map(([x, y, delay], i) => (
         <span key={i} className="jlt-glint" style={{ left: `${x}%`, top: `${y}%`, animationDelay: `${delay}s` }} />
       ))}
       <div className="jlt-grain absolute inset-0" />
-      <div className="absolute inset-x-0 bottom-0 h-24 bg-gradient-to-t from-[#0a302e]/60 to-transparent" />
     </div>
   )
 }
