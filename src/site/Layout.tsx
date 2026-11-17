@@ -1,5 +1,5 @@
 import { useEffect, useState, type ReactNode } from 'react'
-import { Heart, Mail, MapPin, Menu, Phone, X } from 'lucide-react'
+import { Facebook, Heart, Instagram, Mail, MapPin, Menu, Phone, X } from 'lucide-react'
 import * as Dialog from '@radix-ui/react-dialog'
 import { BackgroundVideo, VIDEO_CREDIT_URL } from './ui'
 import { availableCurrencies, go, linkClick, socialLinks, useSite, whatsappUrl, type Currency } from './lib'
@@ -224,20 +224,35 @@ function BottomBanner() {
   )
 }
 
+// Instagram, Facebook and WhatsApp stacked in the bottom right corner of every page, always on screen.
 export function WhatsAppFloat() {
   const { t, content } = useSite()
+  const socials = content.settings.socials
+  const small = 'flex h-11 w-11 md:h-12 md:w-12 items-center justify-center rounded-full text-white shadow-[0_8px_24px_rgba(0,0,0,0.22)] transition hover:scale-105'
   return (
-    <a
-      href={whatsappUrl(content)}
-      target="_blank"
-      rel="noopener"
-      aria-label={t.whatsappFloat}
-      className="fixed bottom-[calc(1rem+var(--banner-h,0px))] right-4 z-30 flex h-14 w-14 items-center justify-center rounded-full bg-[#25D366] text-white shadow-[0_10px_30px_rgba(0,0,0,0.25)] transition hover:scale-105 md:bottom-[calc(1.5rem+var(--banner-h,0px))] md:right-6"
-    >
-      <svg viewBox="0 0 24 24" className="h-7 w-7 fill-current" aria-hidden="true">
+    <div className="fixed bottom-[calc(1rem+var(--banner-h,0px))] right-4 z-30 flex flex-col items-center gap-2.5 md:gap-3 md:bottom-[calc(1.5rem+var(--banner-h,0px))] md:right-6">
+      {socials?.instagram && (
+        <a href={socials.instagram} target="_blank" rel="noopener" aria-label="Instagram" className={`${small} bg-[radial-gradient(circle_at_30%_107%,#fdf497_0%,#fdf497_5%,#fd5949_45%,#d6249f_60%,#285AEB_90%)]`}>
+          <Instagram className="h-5 w-5 md:h-6 md:w-6" aria-hidden="true" />
+        </a>
+      )}
+      {socials?.facebook && (
+        <a href={socials.facebook} target="_blank" rel="noopener" aria-label="Facebook" className={`${small} bg-[#1877F2]`}>
+          <Facebook className="h-5 w-5 fill-current md:h-6 md:w-6" strokeWidth={0} aria-hidden="true" />
+        </a>
+      )}
+      <a
+        href={whatsappUrl(content)}
+        target="_blank"
+        rel="noopener"
+        aria-label={t.whatsappFloat}
+        className="flex h-14 w-14 items-center justify-center rounded-full bg-[#25D366] text-white shadow-[0_10px_30px_rgba(0,0,0,0.25)] transition hover:scale-105"
+      >
+        <svg viewBox="0 0 24 24" className="h-7 w-7 fill-current" aria-hidden="true">
         <path d="M17.47 14.38c-.3-.15-1.76-.87-2.03-.97-.27-.1-.47-.15-.67.15-.2.3-.77.97-.94 1.17-.17.2-.35.22-.65.07-.3-.15-1.26-.46-2.4-1.48-.89-.79-1.49-1.77-1.66-2.07-.17-.3-.02-.46.13-.61.13-.13.3-.35.45-.52.15-.17.2-.3.3-.5.1-.2.05-.37-.03-.52-.07-.15-.67-1.61-.92-2.21-.24-.58-.49-.5-.67-.51h-.57c-.2 0-.52.07-.79.37-.27.3-1.04 1.02-1.04 2.48s1.07 2.88 1.21 3.08c.15.2 2.1 3.2 5.08 4.49.71.31 1.26.49 1.69.63.71.23 1.36.2 1.87.12.57-.09 1.76-.72 2.01-1.41.25-.69.25-1.29.17-1.41-.07-.12-.27-.2-.57-.35M12.05 21.5h-.01a9.4 9.4 0 0 1-4.8-1.31l-.34-.2-3.57.93.95-3.48-.22-.36a9.4 9.4 0 0 1-1.44-5.02c0-5.2 4.24-9.43 9.44-9.43a9.37 9.37 0 0 1 6.67 2.77 9.37 9.37 0 0 1 2.76 6.67c0 5.2-4.23 9.43-9.44 9.43m8.03-17.46A11.3 11.3 0 0 0 12.05.7C5.79.7.7 5.79.7 12.05c0 2 .52 3.95 1.52 5.67L.6 23.3l5.72-1.5a11.3 11.3 0 0 0 5.42 1.38h.01c6.26 0 11.35-5.09 11.35-11.35 0-3.03-1.18-5.88-3.32-8.02" />
       </svg>
-    </a>
+      </a>
+    </div>
   )
 }
 
